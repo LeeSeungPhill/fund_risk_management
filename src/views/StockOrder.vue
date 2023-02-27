@@ -73,13 +73,17 @@
             <v-btn @click="sendForm" style="background: mediumaquamarine">저장</v-btn>
             <v-btn @click="sendOrderList" style="background: red">전송</v-btn>
             <v-btn @click="reload()" style="background: skyblue">주문갱신</v-btn>
-            <v-btn @click="openPopup()" style="background: pink">종목시세</v-btn>            
+            <v-btn @click="openPopup1()" style="background: pink">종목시세</v-btn>            
+            <v-btn @click="openPopup2()" style="background: orange">수급잠정</v-btn>
           </v-col>
         </v-row>
       </v-container>
     </div>
-    <div class="popup-view" :class="{active: popupView}">
-      <pop-up @close-popup="openPopup()"></pop-up>
+    <div class="popup-view" :class="{active: popupView1}">
+      <pop-up1 @close-popup="openPopup1()"></pop-up1>
+    </div>
+    <div class="popup-view" :class="{active: popupView2}">
+      <pop-up2 @close-popup="openPopup2()"></pop-up2>
     </div>
     <div>
       <v-container fluid>
@@ -202,7 +206,8 @@
 </template>
 <script>
 import axios from "axios";
-import PopUp from '../components/StockInfo.vue'
+import PopUp1 from '../components/StockInfo.vue'
+import PopUp2 from '../components/SubjectSubTotal.vue'
 
 let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주소
 
@@ -210,7 +215,8 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
 
     data: () => {
         return {
-            popupView: false,
+            popupView1: false,
+            popupView2: false,
             stock_asset_num: null,
             stock_asset_risk_num: null,
             StockOrderList: [],
@@ -244,7 +250,8 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
     },
     name: 'stockOrder',
     components: {
-      PopUp,
+      PopUp1,
+      PopUp2
     },
     methods: {
       sendForm: function() { 
@@ -333,7 +340,7 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
       deleteOrder: function(id){
         axios({
           method: "DELETE",
-          url: url + id + "/", // http://192.168.1.5:8000/kis/stockOrder/1 로 delete 이벤트 전송
+          url: url + id + "/", // http://phills2.gonetis.com:8000/kis/stockOrder/1 로 delete 이벤트 전송
         }).then((response) => {
           console.log("Success", response);
           this.getOrderCompleteList();
@@ -423,8 +430,11 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
             console.log("Failed to cancelOrder", error.response);
         });
       },
-      openPopup() {
-        this.popupView = (this.popupView) ? false : true
+      openPopup1() {
+        this.popupView1 = (this.popupView1) ? false : true
+      },
+      openPopup2(){
+        this.popupView2 = (this.popupView2) ? false : true
       },
       sendLevel: function(level){
         axios({
