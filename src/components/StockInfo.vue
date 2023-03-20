@@ -21,6 +21,24 @@
           <v-col>하한가 : {{min_price}}</v-col>
           <v-col>거래량 : {{volumn}}</v-col>
         </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field v-model="data.through_price" label="돌파가격" ></v-text-field>
+            <v-text-field v-model="data.leave_price" label="이탈가격" ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field v-model="data.resist_price" label="저항가격" ></v-text-field>
+            <v-text-field v-model="data.support_price" label="지지가격" ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field v-model="data.trend_high_price" label="추세상단가격" ></v-text-field>
+            <v-text-field v-model="data.trend_low_price" label="추세하단가격" ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-btn @click="saveInterestItem" style="background: darkseagreen">등록</v-btn>
+            <v-btn @click="minutesInfo" style="background: darkgoldenrod">분봉</v-btn>
+          </v-col>            
+        </v-row>
       </v-container>
   </div>
 </template>
@@ -31,6 +49,7 @@
     data() {
       return {
           code: null,
+          name: null,
           now_price: null,
           high_price: null,
           low_price: null,
@@ -38,11 +57,15 @@
           max_price: null,
           min_price: null,
           volumn: null,
-          company_name: null,
           charturl: null,
           data: {
-            company: ""
-            
+            company: "",
+            through_price: "",
+            leave_price: "",
+            resist_price: "",
+            support_price: "",
+            trend_high_price: "",
+            trend_low_price: ""
           }
         };
     },
@@ -71,6 +94,7 @@
           this.min_price = response.data[0].min_price
           this.volumn = response.data[0].volumn
           this.code = response.data[0].code
+          this.name = data.company
           this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+data.company+"/"
           window.open(this.charturl, "", "_blank"); 
         }).catch(error => {
@@ -78,11 +102,57 @@
           console.log("Failed to searchStock", error.response);
         });
       },
-      openChart: function(){
-        if(this.charturl != null) 
-          window.open(this.charturl, "", "_blank"); 
+      minutesInfo: function(){
+        if (this.code != null && this.name != null){
+          axios({
+            method: "GET",
+            url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
+            params:{
+              code: this.code,
+              company: this.name,
+              app_key: this.$route.params.app_key,
+              app_secret: this.$route.params.app_secret,
+              access_token: this.$route.params.access_token
+            }
+                      
+          }).then(response => {
+            console.log("Success", response)
+            this.charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+            window.open(this.charturl, "", "_blank"); 
+            this.charturl = null
+          }).catch(error => {
+            alert("처리 에러")
+            console.log("Failed to minutesInfo", error.response);
+          }); 
+        }
       },
-
+      clearForm: function() {
+        (this.data.company = ""),(this.data.through_price = ""),(this.data.leave_price = ""),(this.data.resist_price = ""),(this.data.support_price = ""),(this.data.trend_high_price = ""),(this.data.trend_low_price = "");
+      },
+      saveInterestItem: function(){
+          axios({
+            method: "POST",
+            url: "http://phills2.gonetis.com:8000/kis/interestItem/",
+            data: {
+              acct_no: this.$route.params.acct_no,
+              code: this.code,
+              name: this.data.company,
+              through_price: this.data.through_price,
+              leave_price: this.data.leave_price,
+              resist_price: this.data.resist_price,
+              support_price: this.data.support_price,
+              trend_high_price: this.data.trend_high_price,
+              trend_low_price: this.data.trend_low_price
+            }, 
+          }).then((response) => {
+            console.log("Success", response);
+            alert("등록 완료")
+            this.clearForm();
+          }).catch((error) => {
+            alert("등록 에러")
+            console.log("Failed to saveInterestItem", error.response);
+          }); 
+      }
     }
 }
 </script>

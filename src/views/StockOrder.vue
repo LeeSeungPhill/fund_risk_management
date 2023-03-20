@@ -40,10 +40,10 @@
           <v-col cols="1" md="5">
             <v-text-field v-model="data.name" label="종목명" required></v-text-field>
           </v-col>    
-          <v-col cols="1" md="5">
+          <v-col v-show="radioSel != 'market'" cols="1" md="5">
             <v-text-field v-model="data.buy_price" label="주문단가" ></v-text-field>
           </v-col>    
-          <v-col cols="1" md="5">
+          <v-col v-show="radioSel === 'limit' || radioSel === 'market'" cols="1" md="5">
             <v-text-field v-model="data.buy_amount" label="주문수량" ></v-text-field>
           </v-col>
           <v-col cols="1" md="5">
@@ -60,10 +60,10 @@
           <v-col cols="1" md="5">
             <v-text-field v-model="data.name" label="종목명" required></v-text-field>
           </v-col>    
-          <v-col cols="1" md="5">
+          <v-col v-show="radioSel != 'market'" cols="1" md="5">
             <v-text-field v-model="data.sell_price" label="매도단가" ></v-text-field>
           </v-col>    
-          <v-col cols="1" md="5">
+          <v-col v-show="radioSel === 'limit' || radioSel === 'market'" cols="1" md="5">
             <v-text-field v-model="data.sell_amount" label="매도수량" ></v-text-field>
           </v-col>
         </v-row>
@@ -75,6 +75,7 @@
             <v-btn @click="reload()" style="background: skyblue">주문갱신</v-btn>
             <v-btn @click="openPopup1()" style="background: pink">종목시세</v-btn>            
             <v-btn @click="openPopup2()" style="background: orange">수급잠정</v-btn>
+            <v-btn @click="openPopup3()" style="background: sienna">관심종목</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -84,6 +85,9 @@
     </div>
     <div class="popup-view" :class="{active: popupView2}">
       <pop-up2 @close-popup="openPopup2()"></pop-up2>
+    </div>
+    <div class="popup-view" :class="{active: popupView3}">
+      <pop-up3 @close-popup="openPopup3()"></pop-up3>
     </div>
     <div>
       <v-container fluid>
@@ -194,11 +198,11 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-btn @click="sendLevel(1)" style="background: gray">[하락지속 기술적반등]</v-btn>
-            <v-btn @click="sendLevel(2)" style="background: gray">[단기추세 기술적반등]</v-btn>
-            <v-btn @click="sendLevel(3)" style="background: gray">[패턴 기술적반등]</v-btn>
-            <v-btn @click="sendLevel(4)" style="background: green">[추세전환 눌림반등]</v-btn>
-            <v-btn @click="sendLevel(5)" style="background: blue">[상승지속 기술적반등]</v-btn>
+            <v-btn @click="sendLevel(1)" style="background: lightyellow">[하락지속 기술적반등]</v-btn>
+            <v-btn @click="sendLevel(2)" style="background: lightsteelblue">[단기추세 기술적반등]</v-btn>
+            <v-btn @click="sendLevel(3)" style="background: greenyellow">[패턴 기술적반등]</v-btn>
+            <v-btn @click="sendLevel(4)" style="background: greenyellow">[추세전환 눌림반등]</v-btn>
+            <v-btn @click="sendLevel(5)" style="background: greenyellow">[상승지속 기술적반등]</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -208,6 +212,7 @@
 import axios from "axios";
 import PopUp1 from '../components/StockInfo.vue'
 import PopUp2 from '../components/SubjectSubTotal.vue'
+import PopUp3 from '../components/InterestItem.vue'
 
 let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주소
 
@@ -217,6 +222,7 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
         return {
             popupView1: false,
             popupView2: false,
+            popupView3: false,
             stock_asset_num: null,
             stock_asset_risk_num: null,
             StockOrderList: [],
@@ -251,7 +257,8 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
     name: 'stockOrder',
     components: {
       PopUp1,
-      PopUp2
+      PopUp2,
+      PopUp3
     },
     methods: {
       sendForm: function() { 
@@ -373,9 +380,11 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
           }
           
         }).then(response => {
+          if(response.data[0].message != "")
+              alert(response.data[0].message)
           console.log("Success", response)
-            this.getOrderCompleteList();
-            this.getStockOrderList();
+          this.getOrderCompleteList();
+          this.getStockOrderList();
         }).catch(error => {
           alert("처리 에러")
           console.log("Failed to updateBuyOrder", error.response);
@@ -399,8 +408,10 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
           
         }).then(response => {
           console.log("Success", response)
-            this.getOrderCompleteList();
-            this.getStockOrderList();
+          if(response.data[0].message != "")
+              alert(response.data[0].message)
+          this.getOrderCompleteList();
+          this.getStockOrderList();
         }).catch(error => {
           alert("처리 에러")
           console.log("Failed to updateBuyOrder", error.response);
@@ -436,6 +447,9 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
       openPopup2(){
         this.popupView2 = (this.popupView2) ? false : true
       },
+      openPopup3(){
+        this.popupView3 = (this.popupView3) ? false : true
+      },
       sendLevel: function(level){
         axios({
           method: "GET",
@@ -468,6 +482,8 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
           }
         }).then(response => {
             this.StockOrderList = response.data;
+            if(response.data[0].message != "")
+              alert(response.data[0].message)
             console.log("Success", response);
             this.getOrderCompleteList();
             this.getStockOrderList();
@@ -483,7 +499,7 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
       getStockOrderList() {
         axios({
           method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/list/",
+          url: "http://phills2.gonetis.com:8000/stockOrder/orderList/",
           params:{
             acct_no: this.$route.params.acct_no,
             app_key: this.$route.params.app_key,
