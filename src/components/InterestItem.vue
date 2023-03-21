@@ -4,6 +4,7 @@
             <v-row>
                 <v-col>종목코드</v-col>
                 <v-col>종목명</v-col>
+                <v-col>현재가격</v-col>
                 <v-col>돌파가격</v-col>
                 <v-col>이탈가격</v-col>
                 <v-col>저항가격</v-col>
@@ -15,8 +16,9 @@
             <v-row v-for="(item, index) in contents" v-bind:key="index">                
                 <v-col><a @click="doInfo(item.code, item.name)">{{item.code}}</a></v-col>
                 <v-col><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></v-col>
+                <v-col>{{item.stck_prpr}}</v-col>
                 <v-col v-show="!item.is_hidden1">
-                    <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)">{{item.through_price}}</a>
+                    <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.K_through_price==='1'"><font color="blue">{{item.through_price}}</font></div><div v-else>{{item.through_price}}</div></a>
                 </v-col>    
                 <v-col v-show="item.is_hidden1">                    
                     <v-form>
@@ -33,7 +35,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden2">
-                    <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)">{{item.leave_price}}</a>
+                    <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)"><div v-if="item.D_leave_price==='1'"><font color="red">{{item.leave_price}}</font></div><div v-else>{{item.leave_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden2">                    
                     <v-form>
@@ -50,7 +52,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden3">
-                    <a @click="item.is_hidden3 = !item.is_hidden3;onlyItem(item, contents)">{{item.resist_price}}</a>
+                    <a @click="item.is_hidden3 = !item.is_hidden3;onlyItem(item, contents)"><div v-if="item.K_resist_price==='1'"><font color="blue">{{item.resist_price}}</font></div><div v-else>{{item.resist_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden3">                    
                     <v-form>
@@ -67,7 +69,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden4">
-                    <a @click="item.is_hidden4 = !item.is_hidden4;onlyItem(item, contents)">{{item.support_price}}</a>
+                    <a @click="item.is_hidden4 = !item.is_hidden4;onlyItem(item, contents)"><div v-if="item.D_support_price==='1'"><font color="red">{{item.support_price}}</font></div><div v-else>{{item.support_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden4">                    
                     <v-form>
@@ -84,7 +86,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden5">
-                    <a @click="item.is_hidden5 = !item.is_hidden5;onlyItem(item, contents)">{{item.trend_high_price}}</a>
+                    <a @click="item.is_hidden5 = !item.is_hidden5;onlyItem(item, contents)"><div v-if="item.K_trend_high_price==='1'"><font color="blue">{{item.trend_high_price}}</font></div><div v-else>{{item.trend_high_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden5">                    
                     <v-form>
@@ -101,7 +103,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden6">
-                    <a @click="item.is_hidden6 = !item.is_hidden6;onlyItem(item, contents)">{{item.trend_low_price}}</a>
+                    <a @click="item.is_hidden6 = !item.is_hidden6;onlyItem(item, contents)"><div v-if="item.D_trend_low_price==='1'"><font color="red">{{item.trend_low_price}}</font></div><div v-else>{{item.trend_low_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden6">                    
                     <v-form>
@@ -154,6 +156,9 @@
                     url: "http://phills2.gonetis.com:8000/interestItem/list/",
                     params:{
                         acct_no: this.$route.params.acct_no,
+                        app_key: this.$route.params.app_key,
+                        app_secret: this.$route.params.app_secret,
+                        access_token: this.$route.params.access_token
                     }
                 
                 }).then(response => {
@@ -232,6 +237,9 @@
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
+                    app_key: this.$route.params.app_key,
+                    app_secret: this.$route.params.app_secret,
+                    access_token: this.$route.params.access_token,
                     id: id,
                     through_price: data.through_price,
                     leave_price: leave_price,
@@ -256,6 +264,9 @@
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
+                    app_key: this.$route.params.app_key,
+                    app_secret: this.$route.params.app_secret,
+                    access_token: this.$route.params.access_token,                    
                     id: id,
                     through_price: through_price,
                     leave_price: data.leave_price,
@@ -280,6 +291,9 @@
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
+                    app_key: this.$route.params.app_key,
+                    app_secret: this.$route.params.app_secret,
+                    access_token: this.$route.params.access_token,                    
                     id: id,
                     through_price: through_price,
                     leave_price: leave_price,
@@ -304,6 +318,9 @@
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
+                    app_key: this.$route.params.app_key,
+                    app_secret: this.$route.params.app_secret,
+                    access_token: this.$route.params.access_token,                    
                     id: id,
                     through_price: through_price,
                     leave_price: leave_price,
@@ -328,6 +345,9 @@
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
+                    app_key: this.$route.params.app_key,
+                    app_secret: this.$route.params.app_secret,
+                    access_token: this.$route.params.access_token,                    
                     id: id,
                     through_price: through_price,
                     leave_price: leave_price,
@@ -352,6 +372,9 @@
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
+                    app_key: this.$route.params.app_key,
+                    app_secret: this.$route.params.app_secret,
+                    access_token: this.$route.params.access_token,                    
                     id: id,
                     through_price: through_price,
                     leave_price: leave_price,

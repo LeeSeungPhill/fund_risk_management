@@ -32,7 +32,7 @@
           <v-col>{{item.eval_sum}}</v-col>
           <v-col>{{item.valuation_sum}}</v-col>
           <v-col v-show="!item.is_hidden1">
-            <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)">[{{item.end_loss_price}}]</a>
+            <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.D_loss_price==='1'">[<font color="red">{{item.end_loss_price}}</font>]</div><div v-else>[{{item.end_loss_price}}]</div></a>
           </v-col>    
           <v-col v-show="item.is_hidden1">                    
             <v-form>
@@ -49,7 +49,7 @@
             </v-form>
           </v-col>
           <v-col v-show="!item.is_hidden2">
-            <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)">[{{item.end_target_price}}]</a>
+            <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)"><div v-if="item.K_target_price==='1'">[<font color="blue">{{item.end_target_price}}</font>]</div><div v-else>[{{item.end_target_price}}]</div></a>
           </v-col>    
           <v-col v-show="item.is_hidden2">                    
             <v-form>
