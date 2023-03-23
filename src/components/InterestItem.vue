@@ -18,7 +18,7 @@
                 <v-col><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></v-col>
                 <v-col>{{item.stck_prpr}}</v-col>
                 <v-col v-show="!item.is_hidden1">
-                    <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.K_through_price==='1'"><font color="blue">{{item.through_price}}</font></div><div v-else>{{item.through_price}}</div></a>
+                    <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.K_through_price==='1'" class="up1">{{item.through_price}}</div><div v-else>{{item.through_price}}</div></a>
                 </v-col>    
                 <v-col v-show="item.is_hidden1">                    
                     <v-form>
@@ -35,7 +35,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden2">
-                    <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)"><div v-if="item.D_leave_price==='1'"><font color="red">{{item.leave_price}}</font></div><div v-else>{{item.leave_price}}</div></a>
+                    <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)"><div v-if="item.D_leave_price==='1'" class="down1">{{item.leave_price}}</div><div v-else>{{item.leave_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden2">                    
                     <v-form>
@@ -52,7 +52,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden3">
-                    <a @click="item.is_hidden3 = !item.is_hidden3;onlyItem(item, contents)"><div v-if="item.K_resist_price==='1'"><font color="blue">{{item.resist_price}}</font></div><div v-else>{{item.resist_price}}</div></a>
+                    <a @click="item.is_hidden3 = !item.is_hidden3;onlyItem(item, contents)"><div v-if="item.K_resist_price==='1'" class="up2">{{item.resist_price}}</div><div v-else>{{item.resist_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden3">                    
                     <v-form>
@@ -69,7 +69,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden4">
-                    <a @click="item.is_hidden4 = !item.is_hidden4;onlyItem(item, contents)"><div v-if="item.D_support_price==='1'"><font color="red">{{item.support_price}}</font></div><div v-else>{{item.support_price}}</div></a>
+                    <a @click="item.is_hidden4 = !item.is_hidden4;onlyItem(item, contents)"><div v-if="item.D_support_price==='1'" class="down2">{{item.support_price}}</div><div v-else>{{item.support_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden4">                    
                     <v-form>
@@ -86,7 +86,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden5">
-                    <a @click="item.is_hidden5 = !item.is_hidden5;onlyItem(item, contents)"><div v-if="item.K_trend_high_price==='1'"><font color="blue">{{item.trend_high_price}}</font></div><div v-else>{{item.trend_high_price}}</div></a>
+                    <a @click="item.is_hidden5 = !item.is_hidden5;onlyItem(item, contents)"><div v-if="item.K_trend_high_price==='1'" class="up3">{{item.trend_high_price}}</div><div v-else>{{item.trend_high_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden5">                    
                     <v-form>
@@ -103,7 +103,7 @@
                     </v-form>
                 </v-col>
                 <v-col v-show="!item.is_hidden6">
-                    <a @click="item.is_hidden6 = !item.is_hidden6;onlyItem(item, contents)"><div v-if="item.D_trend_low_price==='1'"><font color="red">{{item.trend_low_price}}</font></div><div v-else>{{item.trend_low_price}}</div></a>
+                    <a @click="item.is_hidden6 = !item.is_hidden6;onlyItem(item, contents)"><div v-if="item.D_trend_low_price==='1'" class="down3">{{item.trend_low_price}}</div><div v-else>{{item.trend_low_price}}</div></a>
                 </v-col>
                 <v-col v-show="item.is_hidden6">                    
                     <v-form>
@@ -127,8 +127,8 @@
             </v-row>
         </v-container>
     </div>
-  </template>
-  <script>
+</template>
+<script>
     import axios from "axios";
   
     export default {
@@ -398,8 +398,33 @@
             this.fetchData();
         }
     }
-  </script>
-    
+</script>
+<style scoped>
+.up1 {
+    font-weight: bold;
+    color: red;
+}
+.up2 {
+    font-weight: bold;
+    color: darkred;
+}
+.up3 {
+    font-weight: bold;
+    color: mediumvioletred
+}
+.down1 {
+  font-weight: bold;
+  color: blue;
+}
+.down2 {
+  font-weight: bold;
+  color: darkblue;
+}
+.down3 {
+  font-weight: bold;
+  color: mediumturquoise;
+}
+</style>    
   
     
     
