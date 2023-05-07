@@ -95,7 +95,7 @@
 <script>
 import axios from "axios";
 
-let url = "http://phills2.gonetis.com/stockBalance/balanceList/"; //장고 서버 주소
+let url = "http://phills2.gonetis.com:8000/stockBalance/balanceList/"; //장고 서버 주소
 
 export default {
   data() {
@@ -121,7 +121,7 @@ export default {
     doInfo(name){
       axios({
           method: "GET",
-          url: "http://phills2.gonetis.com/stockBalance/info/",
+          url: "http://phills2.gonetis.com:8000/stockBalance/info/",
           params:{
             company: name,
           }
@@ -131,7 +131,7 @@ export default {
           this.company_name = response.data[0].name
           
           if(name == this.company_name) {
-            this.charturl = "http://phills2.gonetis.com/stockBalance/"+this.company_name+"/"
+            this.charturl = "http://phills2.gonetis.com:8000/stockBalance/"+this.company_name+"/"
             window.open(this.charturl, "", "_blank"); 
             this.company_name = null
             this.charturl = null
@@ -146,7 +146,7 @@ export default {
     minutesInfo(name){
       axios({
           method: "GET",
-          url: "http://phills2.gonetis.com/stockBalance/minutesInfo/",
+          url: "http://phills2.gonetis.com:8000/stockBalance/minutesInfo/",
           params:{
             company: name,
             app_key: this.$route.params.app_key,
@@ -159,7 +159,7 @@ export default {
           this.company_name = response.data[0].name
           
           if(name == this.company_name) {
-            this.charturl = "http://phills2.gonetis.com/stockBalance/minutes_"+this.company_name+"/"
+            this.charturl = "http://phills2.gonetis.com:8000/stockBalance/minutes_"+this.company_name+"/"
             window.open(this.charturl, "", "_blank"); 
             this.company_name = null
             this.charturl = null
@@ -186,7 +186,7 @@ export default {
       }
       axios({
         method: "GET",
-        url: "http://phills2.gonetis.com/stockBalance/update/",
+        url: "http://phills2.gonetis.com:8000/stockBalance/update/",
         params:{
           acct_no: this.$route.params.acct_no,
           id: id,
@@ -209,7 +209,7 @@ export default {
       }
       axios({
         method: "GET",
-        url: "http://phills2.gonetis.com/stockBalance/update/",
+        url: "http://phills2.gonetis.com:8000/stockBalance/update/",
         params:{
           acct_no: this.$route.params.acct_no,
           id: id,
@@ -235,7 +235,7 @@ export default {
       }
       axios({
         method: "GET",
-        url: "http://phills2.gonetis.com/stockBalance/update/",
+        url: "http://phills2.gonetis.com:8000/stockBalance/update/",
         params:{
           acct_no: this.$route.params.acct_no,
           id: id,
@@ -274,7 +274,7 @@ export default {
     marketReg(){
       axios({
       method: "GET",
-      url: "http://phills2.gonetis.com/stockFundMng/marketReg/",
+      url: "http://phills2.gonetis.com:8000/stockFundMng/marketReg/",
       params:{
         acct_no: this.$route.params.acct_no,
         app_key: this.$route.params.app_key,

@@ -153,7 +153,7 @@
             fetchData: function(){
                 axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com/interestItem/list/",
+                    url: "http://phills2.gonetis.com:8000/interestItem/list/",
                     params:{
                         acct_no: this.$route.params.acct_no,
                         app_key: this.$route.params.app_key,
@@ -172,7 +172,7 @@
             doInfo(code, name){
                 axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com/stockOrder/chart/",
+                    url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
                     params:{
                         code: code.trim(),
                         company: name.trim(),
@@ -180,7 +180,7 @@
                         
                 }).then(response => {
                     console.log("Success", response)
-                    this.charturl = "http://phills2.gonetis.com/stockOrder/"+response.data[0].name+"/"
+                    this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
                     window.open(this.charturl, "", "_blank"); 
                     this.charturl = null
                 }).catch(error => {
@@ -194,14 +194,14 @@
                 alert(market)
                 axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com/stockBalance/marketInfo/",
+                    url: "http://phills2.gonetis.com:8000/stockBalance/marketInfo/",
                     params:{
                         market: market
                     }
                         
                 }).then(response => {
                     console.log("Success", response)
-                    this.charturl = "http://phills2.gonetis.com/stockBalance/"+response.data[0].market+"/"
+                    this.charturl = "http://phills2.gonetis.com:8000/stockBalance/"+response.data[0].market+"/"
                     window.open(this.charturl, "", "_blank"); 
                     this.charturl = null
                 }).catch(error => {
@@ -214,7 +214,7 @@
             minutesInfo(code, name){
                 axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com/stockOrder/minutesInfo/",
+                    url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
                     params:{
                         code: code.trim(),
                         company: name.trim(),
@@ -225,7 +225,7 @@
                     
                 }).then(response => {
                     console.log("Success", response)
-                    this.charturl = "http://phills2.gonetis.com/stockOrder/minutes_"+response.data[0].name+"/"
+                    this.charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
                     window.open(this.charturl, "", "_blank"); 
                     this.charturl = null
                 }).catch(error => {
@@ -238,7 +238,7 @@
             minutesInfo1: function(market){
                 axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com/stockBalance/marketMinutesInfo/",
+                    url: "http://phills2.gonetis.com:8000/stockBalance/marketMinutesInfo/",
                     params:{
                         market: market,
                         app_key: this.$route.params.app_key,
@@ -248,7 +248,7 @@
                                 
                 }).then(response => {
                     console.log("Success", response)
-                    this.charturl = "http://phills2.gonetis.com/stockBalance/minutes_"+response.data[0].market+"/"
+                    this.charturl = "http://phills2.gonetis.com:8000/stockBalance/minutes_"+response.data[0].market+"/"
                     window.open(this.charturl, "", "_blank"); 
                     this.charturl = null
                 }).catch(error => {
@@ -261,7 +261,7 @@
             deleteItem: function(id){
                 axios({
                     method: "DELETE",
-                    url: "http://phills2.gonetis.com/kis/interestItem/" + id + "/", // http://phills2.gonetis.com/kis/interestItem/1 로 delete 이벤트 전송
+                    url: "http://phills2.gonetis.com:8000/kis/interestItem/" + id + "/", // http://phills2.gonetis.com:8000/kis/interestItem/1 로 delete 이벤트 전송
                 }).then((response) => {
                     console.log("Success", response);
                     this.fetchData()
@@ -278,7 +278,7 @@
             updateItem1: function(data, id, leave_price, resist_price, support_price, trend_high_price, trend_low_price){
                 axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com/interestItem/update/",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
                     app_key: this.$route.params.app_key,
@@ -305,7 +305,7 @@
             updateItem2: function(data, id, through_price, resist_price, support_price, trend_high_price, trend_low_price){
                 axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com/interestItem/update/",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
                     app_key: this.$route.params.app_key,
@@ -332,7 +332,7 @@
             updateItem3: function(data, id, through_price, leave_price, support_price, trend_high_price, trend_low_price){
                 axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com/interestItem/update/",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
                     app_key: this.$route.params.app_key,
@@ -359,7 +359,7 @@
             updateItem4: function(data, id, through_price, leave_price, resist_price, trend_high_price, trend_low_price){
                 axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com/interestItem/update/",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
                     app_key: this.$route.params.app_key,
@@ -386,7 +386,7 @@
             updateItem5: function(data, id, through_price, leave_price, resist_price, support_price, trend_low_price){
                 axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com/interestItem/update/",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
                     app_key: this.$route.params.app_key,
@@ -413,7 +413,7 @@
             updateItem6: function(data, id, through_price, leave_price, resist_price, support_price, trend_high_price){
                 axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com/interestItem/update/",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
                 params:{
                     acct_no: this.$route.params.acct_no,
                     app_key: this.$route.params.app_key,
