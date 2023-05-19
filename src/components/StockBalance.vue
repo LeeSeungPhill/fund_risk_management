@@ -284,7 +284,7 @@ export default {
     })
     .then(response => {
       console.log('stocks:', response.data)
-      this.contents = response.data;
+      //this.contents = response.data;
     })
     .catch(error => {
       console.log(error)
