@@ -283,7 +283,26 @@ export default {
       }
     })
     .then(response => {
-      console.log('stocks:', response.data)
+      console.log('trail_signal:', response.data)
+      //this.contents = response.data;
+    })
+    .catch(error => {
+      console.log(error)
+    })
+    },
+    riskReg(){
+      axios({
+      method: "GET",
+      url: "http://phills2.gonetis.com:8000/stockMarketMng/list/",
+      params:{
+        acct_no: this.$route.params.acct_no,
+        app_key: this.$route.params.app_key,
+        app_secret: this.$route.params.app_secret,
+        access_token: this.$route.params.access_token
+      }
+    })
+    .then(response => {
+      console.log('market_mng :', response.data)
       //this.contents = response.data;
     })
     .catch(error => {
@@ -294,6 +313,7 @@ export default {
   created() { 
     this.fetchData();
     this.marketReg();
+    this.riskReg();
   }
 
   
