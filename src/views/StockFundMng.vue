@@ -10,6 +10,7 @@
         </v-row>
         <v-row>
           <v-col>자산번호</v-col>
+          <v-col>승률</v-col>
           <v-col>현금비중</v-col>
           <v-col>현금비중액</v-col>
           <v-col>총평가금액</v-col>
@@ -23,6 +24,7 @@
         </v-row>
         <v-row v-for="item in contents" v-bind:key="item.asset_num">
           <v-col>{{item.asset_num}}</v-col>
+          <v-col>{{item.market_ratio}}</v-col>
           <v-col>{{item.cash_rate}}</v-col>
           <v-col>{{item.cash_rate_amt}}</v-col>
           <v-col>{{item.tot_evlu_amt}}</v-col>
