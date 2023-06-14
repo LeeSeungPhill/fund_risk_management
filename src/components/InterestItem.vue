@@ -191,7 +191,6 @@
                     window.open(this.charturl, "", "_blank"); 
             },
             doInfo1: function(market){
-                alert(market)
                 axios({
                     method: "GET",
                     url: "http://phills2.gonetis.com:8000/stockBalance/marketInfo/",
