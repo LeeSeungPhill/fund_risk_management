@@ -35,6 +35,7 @@
             <v-text-field v-model="data.trend_low_price" label="추세하단가격" ></v-text-field>
           </v-col>
           <v-col>
+            <v-text-field v-model="data.buy_expect_sum" label="매수예상금액" ></v-text-field>
             <v-btn @click="saveInterestItem" style="background: darkseagreen">등록</v-btn>
             <v-btn @click="minutesInfo" style="background: darkgoldenrod">분봉</v-btn>
           </v-col>            
@@ -65,7 +66,8 @@
             resist_price: "",
             support_price: "",
             trend_high_price: "",
-            trend_low_price: ""
+            trend_low_price: "",
+            buy_expect_sum: ""
           }
         };
     },
@@ -142,7 +144,8 @@
               resist_price: this.data.resist_price,
               support_price: this.data.support_price,
               trend_high_price: this.data.trend_high_price,
-              trend_low_price: this.data.trend_low_price
+              trend_low_price: this.data.trend_low_price,
+              buy_expect_sum: this.data.buy_expect_sum
             }, 
           }).then((response) => {
             console.log("Success", response);

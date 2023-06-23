@@ -11,6 +11,7 @@
                 <v-col>지지가격</v-col>
                 <v-col>추세상단가격</v-col>
                 <v-col>추세하단가격</v-col>
+                <v-col>매수예상금액</v-col>
                 <v-col>변경일자</v-col>
             </v-row>
             <v-row v-for="(item, index) in contents" v-bind:key="index">                
@@ -28,7 +29,7 @@
                                     <v-text-field v-model="data.through_price" label="돌파가격" ></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn @click="item.is_hidden1 = !item.is_hidden1;updateItem1(data, item.id, item.leave_price, item.resist_price, item.support_price, item.trend_high_price, item.trend_low_price);" v-show="item.is_hidden1" color="#4CAF50">변경</v-btn>
+                                    <v-btn @click="item.is_hidden1 = !item.is_hidden1;updateItem1(data, item.id, item.leave_price, item.resist_price, item.support_price, item.trend_high_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden1" color="#4CAF50">변경</v-btn>
                                 </v-col>   
                             </v-row>
                         </v-container>        
@@ -45,7 +46,7 @@
                                     <v-text-field v-model="data.leave_price" label="이탈가격" ></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn @click="item.is_hidden2 = !item.is_hidden2;updateItem2(data, item.id, item.through_price, item.resist_price, item.support_price, item.trend_high_price, item.trend_low_price);" v-show="item.is_hidden2" color="#4CAF50">변경</v-btn>
+                                    <v-btn @click="item.is_hidden2 = !item.is_hidden2;updateItem2(data, item.id, item.through_price, item.resist_price, item.support_price, item.trend_high_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden2" color="#4CAF50">변경</v-btn>
                                 </v-col>   
                             </v-row>
                         </v-container>        
@@ -62,7 +63,7 @@
                                     <v-text-field v-model="data.resist_price" label="저항가격" ></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn @click="item.is_hidden3 = !item.is_hidden3;updateItem3(data, item.id, item.through_price, item.leave_price, item.support_price, item.trend_high_price, item.trend_low_price);" v-show="item.is_hidden3" color="#4CAF50">변경</v-btn>
+                                    <v-btn @click="item.is_hidden3 = !item.is_hidden3;updateItem3(data, item.id, item.through_price, item.leave_price, item.support_price, item.trend_high_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden3" color="#4CAF50">변경</v-btn>
                                 </v-col>   
                             </v-row>
                         </v-container>        
@@ -79,7 +80,7 @@
                                     <v-text-field v-model="data.support_price" label="지지가격" ></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn @click="item.is_hidden4 = !item.is_hidden4;updateItem4(data, item.id, item.through_price, item.leave_price, item.resist_price, item.trend_high_price, item.trend_low_price);" v-show="item.is_hidden4" color="#4CAF50">변경</v-btn>
+                                    <v-btn @click="item.is_hidden4 = !item.is_hidden4;updateItem4(data, item.id, item.through_price, item.leave_price, item.resist_price, item.trend_high_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden4" color="#4CAF50">변경</v-btn>
                                 </v-col>   
                             </v-row>
                         </v-container>        
@@ -96,7 +97,7 @@
                                     <v-text-field v-model="data.trend_high_price" label="추세상단가격" ></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn @click="item.is_hidden5 = !item.is_hidden5;updateItem5(data, item.id, item.through_price, item.leave_price, item.resist_price, item.support_price, item.trend_low_price);" v-show="item.is_hidden5" color="#4CAF50">변경</v-btn>
+                                    <v-btn @click="item.is_hidden5 = !item.is_hidden5;updateItem5(data, item.id, item.through_price, item.leave_price, item.resist_price, item.support_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden5" color="#4CAF50">변경</v-btn>
                                 </v-col>   
                             </v-row>
                         </v-container>        
@@ -113,7 +114,24 @@
                                     <v-text-field v-model="data.trend_low_price" label="추세하단가격" ></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn @click="item.is_hidden6 = !item.is_hidden6;updateItem6(data, item.id, item.through_price,  item.leave_price, item.resist_price, item.support_price, item.trend_high_price);" v-show="item.is_hidden6" color="#4CAF50">변경</v-btn>
+                                    <v-btn @click="item.is_hidden6 = !item.is_hidden6;updateItem6(data, item.id, item.through_price, item.leave_price, item.resist_price, item.support_price, item.trend_high_price, item.buy_expect_sum);" v-show="item.is_hidden6" color="#4CAF50">변경</v-btn>
+                                </v-col>   
+                            </v-row>
+                        </v-container>        
+                    </v-form>
+                </v-col>
+                <v-col v-show="!item.is_hidden7">
+                    <a @click="item.is_hidden7 = !item.is_hidden7;onlyItem(item, contents)"><div>{{item.buy_expect_sum}}</div></a>
+                </v-col>
+                <v-col v-show="item.is_hidden7">                    
+                    <v-form>
+                        <v-container>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="data.buy_expect_sum" label="매수예상금액" ></v-text-field>
+                                </v-col>
+                                <v-col>
+                                    <v-btn @click="item.is_hidden7 = !item.is_hidden7;updateItem7(data, item.id, item.through_price, item.leave_price, item.resist_price, item.support_price, item.trend_high_price, item.trend_low_price);" v-show="item.is_hidden7" color="#4CAF50">변경</v-btn>
                                 </v-col>   
                             </v-row>
                         </v-container>        
@@ -143,6 +161,7 @@
                     support_price: "",
                     trend_high_price: "",
                     trend_low_price: "",
+                    buy_expect_sum: ""
                 },
             };
         },
@@ -274,7 +293,7 @@
                     data.id != contents[index].id ? (contents[index].is_hidden = false) : "";
                 }
             },
-            updateItem1: function(data, id, leave_price, resist_price, support_price, trend_high_price, trend_low_price){
+            updateItem1: function(data, id, leave_price, resist_price, support_price, trend_high_price, trend_low_price, buy_expect_sum){
                 axios({
                 method: "GET",
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
@@ -289,7 +308,8 @@
                     resist_price: resist_price,
                     support_price: support_price,
                     trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price
+                    trend_low_price: trend_low_price,
+                    buy_expect_sum: buy_expect_sum
                 }
                 
                 }).then(response => {
@@ -301,7 +321,7 @@
                     console.log("Failed to updateItem1", error.response);
                 });
             },
-            updateItem2: function(data, id, through_price, resist_price, support_price, trend_high_price, trend_low_price){
+            updateItem2: function(data, id, through_price, resist_price, support_price, trend_high_price, trend_low_price, buy_expect_sum){
                 axios({
                 method: "GET",
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
@@ -316,7 +336,8 @@
                     resist_price: resist_price,
                     support_price: support_price,
                     trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price
+                    trend_low_price: trend_low_price,
+                    buy_expect_sum: buy_expect_sum
                 }
                 
                 }).then(response => {
@@ -328,7 +349,7 @@
                     console.log("Failed to updateItem2", error.response);
                 });
             },
-            updateItem3: function(data, id, through_price, leave_price, support_price, trend_high_price, trend_low_price){
+            updateItem3: function(data, id, through_price, leave_price, support_price, trend_high_price, trend_low_price, buy_expect_sum){
                 axios({
                 method: "GET",
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
@@ -343,7 +364,8 @@
                     resist_price: data.resist_price,
                     support_price: support_price,
                     trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price
+                    trend_low_price: trend_low_price,
+                    buy_expect_sum: buy_expect_sum
                 }
                 
                 }).then(response => {
@@ -355,7 +377,7 @@
                     console.log("Failed to updateItem3", error.response);
                 });
             },
-            updateItem4: function(data, id, through_price, leave_price, resist_price, trend_high_price, trend_low_price){
+            updateItem4: function(data, id, through_price, leave_price, resist_price, trend_high_price, trend_low_price, buy_expect_sum){
                 axios({
                 method: "GET",
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
@@ -370,7 +392,8 @@
                     resist_price: resist_price,
                     support_price: data.support_price,
                     trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price
+                    trend_low_price: trend_low_price,
+                    buy_expect_sum: buy_expect_sum
                 }
                 
                 }).then(response => {
@@ -382,7 +405,7 @@
                     console.log("Failed to updateItem4", error.response);
                 });
             },  
-            updateItem5: function(data, id, through_price, leave_price, resist_price, support_price, trend_low_price){
+            updateItem5: function(data, id, through_price, leave_price, resist_price, support_price, trend_low_price, buy_expect_sum){
                 axios({
                 method: "GET",
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
@@ -397,7 +420,8 @@
                     resist_price: resist_price,
                     support_price: support_price,
                     trend_high_price: data.trend_high_price,
-                    trend_low_price: trend_low_price
+                    trend_low_price: trend_low_price,
+                    buy_expect_sum: buy_expect_sum
                 }
                 
                 }).then(response => {
@@ -409,7 +433,7 @@
                     console.log("Failed to updateItem5", error.response);
                 });
             },
-            updateItem6: function(data, id, through_price, leave_price, resist_price, support_price, trend_high_price){
+            updateItem6: function(data, id, through_price, leave_price, resist_price, support_price, trend_high_price, buy_expect_sum){
                 axios({
                 method: "GET",
                 url: "http://phills2.gonetis.com:8000/interestItem/update/",
@@ -424,7 +448,8 @@
                     resist_price: resist_price,
                     support_price: support_price,
                     trend_high_price: trend_high_price,
-                    trend_low_price: data.trend_low_price
+                    trend_low_price: data.trend_low_price,
+                    buy_expect_sum: buy_expect_sum
                 }
                 
                 }).then(response => {
@@ -434,6 +459,34 @@
                 }).catch(error => {
                     alert("처리 에러")
                     console.log("Failed to updateItem6", error.response);
+                });
+            },
+            updateItem7: function(data, id, through_price, leave_price, resist_price, support_price, trend_high_price, trend_low_price){
+                axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                params:{
+                    acct_no: this.$route.params.acct_no,
+                    app_key: this.$route.params.app_key,
+                    app_secret: this.$route.params.app_secret,
+                    access_token: this.$route.params.access_token,                    
+                    id: id,
+                    through_price: through_price,
+                    leave_price: leave_price,
+                    resist_price: resist_price,
+                    support_price: support_price,
+                    trend_high_price: trend_high_price,
+                    trend_low_price: trend_low_price,
+                    buy_expect_sum: data.buy_expect_sum
+                }
+                
+                }).then(response => {
+                    console.log("Success", response)
+                    this.data.buy_expect_sum = ""
+                    this.contents = response.data;
+                }).catch(error => {
+                    alert("처리 에러")
+                    console.log("Failed to updateItem7", error.response);
                 });
             },                                              
         },
