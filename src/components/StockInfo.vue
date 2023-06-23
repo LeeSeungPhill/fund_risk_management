@@ -5,8 +5,7 @@
           <v-col>
             <v-text-field v-model="data.company" label="종목명" @keypress.enter="searchStock(data);"></v-text-field>
           </v-col>    
-          <v-col>
-            <v-btn @click="closePopup()" style="background: gray">닫기</v-btn>
+          <v-col>시가총액 : {{total_market_value}} 억원 <v-btn @click="closePopup()" style="background: gray">닫기</v-btn>
           </v-col>   
         </v-row>
         <v-row>
@@ -16,10 +15,10 @@
           <v-col>최저가 : {{low_price}}</v-col>
         </v-row>
         <v-row>
+          <v-col>거래량 : {{volumn}}</v-col>
           <v-col>시가 : {{open_price}}</v-col>
           <v-col>상한가 : {{max_price}}</v-col>
           <v-col>하한가 : {{min_price}}</v-col>
-          <v-col>거래량 : {{volumn}}</v-col>
         </v-row>
         <v-row>
           <v-col>
@@ -58,6 +57,7 @@
           max_price: null,
           min_price: null,
           volumn: null,
+          total_market_value: null,
           charturl: null,
           data: {
             company: "",
@@ -95,6 +95,7 @@
           this.max_price = response.data[0].max_price
           this.min_price = response.data[0].min_price
           this.volumn = response.data[0].volumn
+          this.total_market_value = response.data[0].total_market_value
           this.code = response.data[0].code
           this.name = data.company
           this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+data.company+"/"

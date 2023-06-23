@@ -4,6 +4,7 @@
             <v-row>
                 <v-col>종목코드</v-col>
                 <v-col>종목명</v-col>
+                <v-col>시가총액</v-col>
                 <v-col>현재가격</v-col>
                 <v-col>돌파가격</v-col>
                 <v-col>이탈가격</v-col>
@@ -17,6 +18,7 @@
             <v-row v-for="(item, index) in contents" v-bind:key="index">                
                 <v-col><div v-if="item.code==='0001'"><a @click="doInfo1('1001')">{{item.code}}</a></div><div v-else-if="item.code==='1001'"><a @click="doInfo1('2001')">{{item.code}}</a></div><div v-else><a @click="doInfo(item.code, item.name)">{{item.code}}</a></div></v-col>
                 <v-col><div v-if="item.code==='0001'"><a @click="minutesInfo1(item.code)">{{item.name}}</a></div><div v-else-if="item.code==='1001'"><a @click="minutesInfo1(item.code)">{{item.name}}</a></div><div v-else><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></div></v-col>
+                <v-col>{{item.total_market_value}}</v-col>
                 <v-col>{{item.stck_prpr}}</v-col>
                 <v-col v-show="!item.is_hidden1">
                     <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.K_through_price==='1'" class="up1">{{item.through_price}}</div><div v-else>{{item.through_price}}</div></a>
