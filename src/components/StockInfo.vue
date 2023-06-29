@@ -15,7 +15,8 @@
           <v-col>최저가 : {{low_price}}</v-col>
         </v-row>
         <v-row>
-          <v-col>거래량 : {{volumn}}</v-col>
+          <v-col>
+            거래량 (전일대비거래량) : {{volumn}} ({{prdy_vol_rate}})</v-col>
           <v-col>시가 : {{open_price}}</v-col>
           <v-col>상한가 : {{max_price}}</v-col>
           <v-col>하한가 : {{min_price}}</v-col>
@@ -58,6 +59,7 @@
           min_price: null,
           volumn: null,
           total_market_value: null,
+          prdy_vol_rate: null,
           charturl: null,
           data: {
             company: "",
@@ -96,6 +98,7 @@
           this.min_price = response.data[0].min_price
           this.volumn = response.data[0].volumn
           this.total_market_value = response.data[0].total_market_value
+          this.prdy_vol_rate = response.data[0].prdy_vol_rate
           this.code = response.data[0].code
           this.name = data.company
           this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+data.company+"/"

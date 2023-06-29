@@ -12,6 +12,7 @@
           <v-col>종목명</v-col>
           <v-col>매입가</v-col>
           <v-col>현재가</v-col>
+          <v-col>전일비거래량</v-col>
           <v-col>수익률(%)</v-col>
           <v-col>보유수량</v-col>
           <v-col>매입금액</v-col>
@@ -20,12 +21,13 @@
           <v-col>이탈가격</v-col>
           <v-col>목표가격</v-col>
           <v-col>매매계획</v-col>
-          <v-col>자산번호</v-col>
+          <v-col>시가총액</v-col>
         </v-row>
         <v-row v-for="item in contents" v-bind:key="item.name">
           <v-col><a @click="doInfo(item.name)">{{item.name}}</a></v-col>
           <v-col><a @click="minutesInfo(item.name)">{{item.purchase_price}}</a></v-col>
           <v-col>{{item.current_price}}</v-col>
+          <v-col>{{item.prdy_vol_rate}}</v-col>
           <v-col>{{item.earnings_rate}}</v-col>
           <v-col>{{item.purchase_amount}}</v-col>
           <v-col>{{item.purchase_sum}}</v-col>
@@ -86,7 +88,7 @@
               </v-container>        
             </v-form>
           </v-col>          
-          <v-col>{{item.asset_num}}</v-col>
+          <v-col>{{item.total_market_value}}</v-col>
         </v-row>
     </v-container>      
   </div>
@@ -189,6 +191,9 @@ export default {
         url: "http://phills2.gonetis.com:8000/stockBalance/update/",
         params:{
           acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token,
           id: id,
           end_loss_price: data.end_loss_price,
           end_target_price: end_target_price,
@@ -212,6 +217,9 @@ export default {
         url: "http://phills2.gonetis.com:8000/stockBalance/update/",
         params:{
           acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token,
           id: id,
           end_loss_price: end_loss_price,
           end_target_price: data.end_target_price,
@@ -238,6 +246,9 @@ export default {
         url: "http://phills2.gonetis.com:8000/stockBalance/update/",
         params:{
           acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token,
           id: id,
           end_loss_price: end_loss_price,
           end_target_price: end_target_price,

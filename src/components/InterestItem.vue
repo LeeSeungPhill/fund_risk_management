@@ -6,6 +6,7 @@
                 <v-col>종목명</v-col>
                 <v-col>시가총액</v-col>
                 <v-col>현재가격</v-col>
+                <v-col>전일비거래량</v-col>
                 <v-col>돌파가격</v-col>
                 <v-col>이탈가격</v-col>
                 <v-col>저항가격</v-col>
@@ -20,6 +21,7 @@
                 <v-col><div v-if="item.code==='0001'"><a @click="minutesInfo1(item.code)">{{item.name}}</a></div><div v-else-if="item.code==='1001'"><a @click="minutesInfo1(item.code)">{{item.name}}</a></div><div v-else><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></div></v-col>
                 <v-col>{{item.total_market_value}}</v-col>
                 <v-col>{{item.stck_prpr}}</v-col>
+                <v-col>{{item.prdy_vol_rate}}</v-col>
                 <v-col v-show="!item.is_hidden1">
                     <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.K_through_price==='1'" class="up1">{{item.through_price}}</div><div v-else>{{item.through_price}}</div></a>
                 </v-col>    
