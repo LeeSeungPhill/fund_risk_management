@@ -4,11 +4,12 @@
         <v-row align="center">
           <v-col>
             <v-subheader>
-              [현재 보유 종목]
+              [잔고 종목]
             </v-subheader>
           </v-col>
         </v-row>
         <v-row>
+          <v-col>종목코드</v-col>
           <v-col>종목명</v-col>
           <v-col>매입가</v-col>
           <v-col>현재가</v-col>
@@ -18,14 +19,17 @@
           <v-col>매입금액</v-col>
           <v-col>평가금액</v-col>
           <v-col>증감금액</v-col>
-          <v-col>이탈가격</v-col>
+          <v-col>저항가격</v-col>
+          <v-col>지지가격</v-col>
           <v-col>목표가격</v-col>
+          <v-col>이탈가격</v-col>
           <v-col>매매계획</v-col>
           <v-col>시가총액</v-col>
         </v-row>
-        <v-row v-for="item in contents" v-bind:key="item.name">
-          <v-col><a @click="doInfo(item.name)">{{item.name}}</a></v-col>
-          <v-col><a @click="minutesInfo(item.name)">{{item.purchase_price}}</a></v-col>
+        <v-row v-for="(item, index) in contents" v-bind:key="index">
+          <v-col><a @click="doInfo(item.code, item.name)">{{item.code}}</a></v-col>
+          <v-col><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></v-col>
+          <v-col>{{item.purchase_price}}</v-col>
           <v-col>{{item.current_price}}</v-col>
           <v-col>{{item.prdy_vol_rate}}</v-col>
           <v-col>{{item.earnings_rate}}</v-col>
@@ -34,26 +38,43 @@
           <v-col>{{item.eval_sum}}</v-col>
           <v-col>{{item.valuation_sum}}</v-col>
           <v-col v-show="!item.is_hidden1">
-            <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.D_loss_price==='1'" class="down">{{item.end_loss_price}}</div><div v-else>{{item.end_loss_price}}</div></a>
+            <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.K_sign_resist_price==='1'" class="up">{{item.sign_resist_price}}</div><div v-else>{{item.sign_resist_price}}</div></a>
           </v-col>    
           <v-col v-show="item.is_hidden1">                    
             <v-form>
               <v-container>
                 <v-row>
                   <v-col>
-                    <v-text-field v-model="data.end_loss_price" label="이탈가격" ></v-text-field>
+                    <v-text-field v-model="data.sign_resist_price" label="저항가격" ></v-text-field>
                   </v-col>
                   <v-col>
-                    <v-btn @click="item.is_hidden1 = !item.is_hidden1;updateItem1(data, item.id, item.end_target_price);" v-show="item.is_hidden1" color="#4CAF50">변경</v-btn>
+                    <v-btn @click="item.is_hidden1 = !item.is_hidden1;updateItem1(data, item.id, item.sign_support_price, item.end_target_price, item.end_loss_price);" v-show="item.is_hidden1" color="#4CAF50">변경</v-btn>
                   </v-col>   
                 </v-row>
               </v-container>        
             </v-form>
           </v-col>
           <v-col v-show="!item.is_hidden2">
-            <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)"><div v-if="item.K_target_price==='1'" class="up">{{item.end_target_price}}</div><div v-else>{{item.end_target_price}}</div></a>
+            <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)"><div v-if="item.D_sign_support_price==='1'" class="down">{{item.sign_support_price}}</div><div v-else>{{item.sign_support_price}}</div></a>
           </v-col>    
           <v-col v-show="item.is_hidden2">                    
+            <v-form>
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field v-model="data.sign_support_price" label="지지가격" ></v-text-field>
+                  </v-col>
+                  <v-col>
+                    <v-btn @click="item.is_hidden2 = !item.is_hidden2;updateItem2(data, item.id, item.sign_resist_price, item.end_target_price, item.end_loss_price);" v-show="item.is_hidden2" color="#4CAF50">변경</v-btn>
+                  </v-col>   
+                </v-row>
+              </v-container>        
+            </v-form>
+          </v-col>
+          <v-col v-show="!item.is_hidden3">
+            <a @click="item.is_hidden3 = !item.is_hidden3;onlyItem(item, contents)"><div v-if="item.K_target_price==='1'" class="up">{{item.end_target_price}}</div><div v-else>{{item.end_target_price}}</div></a>
+          </v-col>    
+          <v-col v-show="item.is_hidden3">                    
             <v-form>
               <v-container>
                 <v-row>
@@ -61,16 +82,34 @@
                     <v-text-field v-model="data.end_target_price" label="목표가격" ></v-text-field>
                   </v-col>
                   <v-col>
-                    <v-btn @click="item.is_hidden2 = !item.is_hidden2;updateItem2(data, item.id, item.end_loss_price);" v-show="item.is_hidden2" color="#4CAF50">변경</v-btn>
+                    <v-btn @click="item.is_hidden3 = !item.is_hidden3;updateItem3(data, item.id, item.sign_resist_price, item.sign_support_price, item.end_loss_price);" v-show="item.is_hidden3" color="#4CAF50">변경</v-btn>
                   </v-col>   
                 </v-row>
               </v-container>        
             </v-form>
-          </v-col>          
-          <v-col v-show="!item.is_hidden3">
-            <a @click="item.is_hidden3 = !item.is_hidden3;onlyItem(item, contents)">[{{item.trading_plan}}]</a>
+          </v-col>
+          <v-col v-show="!item.is_hidden4">
+            <a @click="item.is_hidden4 = !item.is_hidden4;onlyItem(item, contents)"><div v-if="item.D_loss_price==='1'" class="down">{{item.end_loss_price}}</div><div v-else>{{item.end_loss_price}}</div></a>
           </v-col>    
-          <v-col v-show="item.is_hidden3">                    
+          <v-col v-show="item.is_hidden4">                    
+            <v-form>
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field v-model="data.end_loss_price" label="이탈가격" ></v-text-field>
+                  </v-col>
+                  <v-col>
+                    <v-btn @click="item.is_hidden4 = !item.is_hidden4;updateItem4(data, item.id, item.sign_resist_price, item.sign_support_price, item.end_target_price);" v-show="item.is_hidden4" color="#4CAF50">변경</v-btn>
+                  </v-col>   
+                </v-row>
+              </v-container>        
+            </v-form>
+          </v-col>
+                    
+          <v-col v-show="!item.is_hidden5">
+            <a @click="item.is_hidden5 = !item.is_hidden5;onlyItem(item, contents)">[{{item.trading_plan}}]</a>
+          </v-col>    
+          <v-col v-show="item.is_hidden5">                    
             <v-form>
               <v-container>
                 <v-row>
@@ -82,7 +121,7 @@
                     </select>
                   </v-col>
                   <v-col>
-                    <v-btn @click="item.is_hidden3 = !item.is_hidden3;updateItem3(item.id, item.end_loss_price, item.end_target_price);" v-show="item.is_hidden3" color="#4CAF50">변경</v-btn>
+                    <v-btn @click="item.is_hidden5 = !item.is_hidden5;updateItem5(item.id, item.sign_resist_price,item.sign_support_price, item.end_target_price, item.end_loss_price);" v-show="item.is_hidden5" color="#4CAF50">변경</v-btn>
                   </v-col>   
                 </v-row>
               </v-container>        
@@ -103,7 +142,6 @@ export default {
   data() {
     return {
       contents: null,
-      company_name: null,
       charturl: null,
       selected: 'H',
       options: [
@@ -112,6 +150,8 @@ export default {
         { text: '보유', value: 'H' }          
       ],
       data: {
+        sign_resist_price: "",
+        sign_support_price: "",
         end_loss_price: "",
         end_target_price: "",
         trading_plan: "",
@@ -120,24 +160,20 @@ export default {
   },
   name: 'StockBalance',
   methods: {
-    doInfo(name){
+    doInfo(code, name){
       axios({
           method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockBalance/info/",
+          url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
           params:{
-            company: name,
+            code: code.trim(),
+            company: name.trim(),
           }
           
         }).then(response => {
           console.log("Success", response)
-          this.company_name = response.data[0].name
-          
-          if(name == this.company_name) {
-            this.charturl = "http://phills2.gonetis.com:8000/stockBalance/"+this.company_name+"/"
-            window.open(this.charturl, "", "_blank"); 
-            this.company_name = null
-            this.charturl = null
-          }
+          this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+          window.open(this.charturl, "", "_blank"); 
+          this.charturl = null
         }).catch(error => {
           alert("처리 에러")
           console.log("Failed to doInfo", error.response);
@@ -145,12 +181,13 @@ export default {
       if(this.charturl != null) 
           window.open(this.charturl, "", "_blank"); 
     },
-    minutesInfo(name){
+    minutesInfo(code, name){
       axios({
           method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockBalance/minutesInfo/",
+          url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
           params:{
-            company: name,
+            code: code.trim(),
+            company: name.trim(),
             app_key: this.$route.params.app_key,
             app_secret: this.$route.params.app_secret,
             access_token: this.$route.params.access_token
@@ -158,14 +195,10 @@ export default {
           
         }).then(response => {
           console.log("Success", response)
-          this.company_name = response.data[0].name
-          
-          if(name == this.company_name) {
-            this.charturl = "http://phills2.gonetis.com:8000/stockBalance/minutes_"+this.company_name+"/"
-            window.open(this.charturl, "", "_blank"); 
-            this.company_name = null
-            this.charturl = null
-          }
+          this.charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+          window.open(this.charturl, "", "_blank"); 
+          this.charturl = null
+
         }).catch(error => {
           alert("처리 에러")
           console.log("Failed to minutesInfo", error.response);
@@ -182,33 +215,13 @@ export default {
         data.id != contents[index].id ? (contents[index].is_hidden = false) : "";
       }
     },
-    updateItem1: function(data, id, end_target_price){
+    updateItem1: function(data, id, sign_support_price, end_target_price, end_loss_price){
+      if(sign_support_price == null){
+        sign_support_price = 0
+      }
       if(end_target_price == null){
         end_target_price = 0
       }
-      axios({
-        method: "GET",
-        url: "http://phills2.gonetis.com:8000/stockBalance/update/",
-        params:{
-          acct_no: this.$route.params.acct_no,
-          app_key: this.$route.params.app_key,
-          app_secret: this.$route.params.app_secret,
-          access_token: this.$route.params.access_token,
-          id: id,
-          end_loss_price: data.end_loss_price,
-          end_target_price: end_target_price,
-          trading_plan: this.selected,
-        }
-      }).then(response => {
-        console.log("Success", response)
-        this.data.end_loss_price = ""
-        this.contents = response.data;
-      }).catch(error => {
-        alert("처리 에러")
-        console.log("Failed to updateItem1", error.response);
-      });
-    },
-    updateItem2: function(data, id, end_loss_price){
       if(end_loss_price == null){
         end_loss_price = 0
       }
@@ -221,8 +234,78 @@ export default {
           app_secret: this.$route.params.app_secret,
           access_token: this.$route.params.access_token,
           id: id,
+          sign_resist_price: data.sign_resist_price,
+          sign_support_price: sign_support_price,
+          end_target_price: end_target_price,
           end_loss_price: end_loss_price,
+          trading_plan: this.selected,
+        }
+      }).then(response => {
+        console.log("Success", response)
+        this.data.sign_resist_price = ""
+        this.contents = response.data;
+      }).catch(error => {
+        alert("처리 에러")
+        console.log("Failed to updateItem1", error.response);
+      });
+    },
+    updateItem2: function(data, id, sign_resist_price, end_target_price, end_loss_price){
+      if(sign_resist_price == null){
+        sign_resist_price = 0
+      }
+      if(end_target_price == null){
+        end_target_price = 0
+      }
+      if(end_loss_price == null){
+        end_loss_price = 0
+      }
+      axios({
+        method: "GET",
+        url: "http://phills2.gonetis.com:8000/stockBalance/update/",
+        params:{
+          acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token,
+          id: id,
+          sign_resist_price: sign_resist_price,
+          sign_support_price: data.sign_support_price,
+          end_target_price: end_target_price,
+          end_loss_price: end_loss_price,
+          trading_plan: this.selected,
+        }
+      }).then(response => {
+        console.log("Success", response)
+        this.data.sign_support_price = ""
+        this.contents = response.data;
+      }).catch(error => {
+        alert("처리 에러")
+        console.log("Failed to updateItem2", error.response);
+      });
+    },
+    updateItem3: function(data, id, sign_resist_price, sign_support_price, end_loss_price){
+      if(sign_resist_price == null){
+        sign_resist_price = 0
+      }
+      if(sign_support_price == null){
+        sign_support_price = 0
+      }
+      if(end_loss_price == null){
+        end_loss_price = 0
+      }
+      axios({
+        method: "GET",
+        url: "http://phills2.gonetis.com:8000/stockBalance/update/",
+        params:{
+          acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token,
+          id: id,
+          sign_resist_price: sign_resist_price,
+          sign_support_price: sign_support_price,
           end_target_price: data.end_target_price,
+          end_loss_price: end_loss_price,
           trading_plan: this.selected,
         }
       }).then(response => {
@@ -231,12 +314,15 @@ export default {
         this.contents = response.data;
       }).catch(error => {
         alert("처리 에러")
-        console.log("Failed to updateItem2", error.response);
+        console.log("Failed to updateItem3", error.response);
       });
     },
-    updateItem3: function(id, end_loss_price, end_target_price){
-      if(end_loss_price == null){
-        end_loss_price = 0
+    updateItem4: function(data, id, sign_resist_price, sign_support_price, end_target_price){
+      if(sign_resist_price == null){
+        sign_resist_price = 0
+      }
+      if(sign_support_price == null){
+        sign_support_price = 0
       }
       if(end_target_price == null){
         end_target_price = 0
@@ -250,6 +336,45 @@ export default {
           app_secret: this.$route.params.app_secret,
           access_token: this.$route.params.access_token,
           id: id,
+          sign_resist_price: sign_resist_price,
+          sign_support_price: sign_support_price,
+          end_target_price: end_target_price,
+          end_loss_price: data.end_loss_price,
+          trading_plan: this.selected,
+        }
+      }).then(response => {
+        console.log("Success", response)
+        this.data.end_loss_price = ""
+        this.contents = response.data;
+      }).catch(error => {
+        alert("처리 에러")
+        console.log("Failed to updateItem4", error.response);
+      });
+    },
+    updateItem5: function(id, sign_resist_price, sign_support_price, end_loss_price, end_target_price){
+      if(sign_resist_price == null){
+        sign_resist_price = 0
+      }
+      if(sign_support_price == null){
+        sign_support_price = 0
+      }
+      if(end_target_price == null){
+        end_target_price = 0
+      }
+      if(end_loss_price == null){
+        end_loss_price = 0
+      }
+      axios({
+        method: "GET",
+        url: "http://phills2.gonetis.com:8000/stockBalance/update/",
+        params:{
+          acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token,
+          id: id,
+          sign_resist_price: sign_resist_price,
+          sign_support_price: sign_support_price,
           end_loss_price: end_loss_price,
           end_target_price: end_target_price,
           trading_plan: this.selected,
@@ -260,7 +385,7 @@ export default {
         this.contents = response.data;
       }).catch(error => {
         alert("처리 에러")
-        console.log("Failed to updateItem3", error.response);
+        console.log("Failed to updateItem5", error.response);
       });
     },        
     fetchData(){
