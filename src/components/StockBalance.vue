@@ -351,7 +351,7 @@ export default {
         console.log("Failed to updateItem4", error.response);
       });
     },
-    updateItem5: function(id, sign_resist_price, sign_support_price, end_loss_price, end_target_price){
+    updateItem5: function(id, sign_resist_price, sign_support_price, end_target_price, end_loss_price){
       if(sign_resist_price == null){
         sign_resist_price = 0
       }
@@ -375,8 +375,8 @@ export default {
           id: id,
           sign_resist_price: sign_resist_price,
           sign_support_price: sign_support_price,
-          end_loss_price: end_loss_price,
           end_target_price: end_target_price,
+          end_loss_price: end_loss_price,
           trading_plan: this.selected,
         }
       }).then(response => {
