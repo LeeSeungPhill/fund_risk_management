@@ -76,6 +76,7 @@
             <v-btn @click="openPopup1()" style="background: pink">종목시세</v-btn>            
             <v-btn @click="openPopup2()" style="background: orange">수급잠정</v-btn>
             <v-btn @click="openPopup3()" style="background: sienna">관심종목</v-btn>
+            <v-btn @click="openPopup4()" style="background: rgb(125, 160, 45)">종목검색</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -89,6 +90,9 @@
     <div class="popup-view" :class="{active: popupView3}">
       <pop-up3 @close-popup="openPopup3()"></pop-up3>
     </div>
+    <div class="popup-view" :class="{active: popupView4}">
+      <pop-up4 @close-popup="openPopup4()"></pop-up4>
+    </div>    
     <div>
       <v-container fluid>
         <v-row align="center">
@@ -213,6 +217,7 @@ import axios from "axios";
 import PopUp1 from '../components/StockInfo.vue'
 import PopUp2 from '../components/SubjectSubTotal.vue'
 import PopUp3 from '../components/InterestItem.vue'
+import PopUp4 from '../components/StockSearch.vue'
 
 let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주소
 
@@ -223,6 +228,7 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
             popupView1: false,
             popupView2: false,
             popupView3: false,
+            popupView4: false,
             stock_asset_num: null,
             stock_asset_risk_num: null,
             StockOrderList: [],
@@ -258,7 +264,8 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
     components: {
       PopUp1,
       PopUp2,
-      PopUp3
+      PopUp3,
+      PopUp4,
     },
     methods: {
       sendForm: function() { 
@@ -449,6 +456,9 @@ let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주
       },
       openPopup3(){
         this.popupView3 = (this.popupView3) ? false : true
+      },
+      openPopup4(){
+        this.popupView4 = (this.popupView4) ? false : true
       },
       sendLevel: function(level){
         axios({
