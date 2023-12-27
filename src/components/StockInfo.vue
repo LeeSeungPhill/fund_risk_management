@@ -133,7 +133,7 @@
         }
       },
       clearForm: function() {
-        (this.data.company = ""),(this.data.through_price = ""),(this.data.leave_price = ""),(this.data.resist_price = ""),(this.data.support_price = ""),(this.data.trend_high_price = ""),(this.data.trend_low_price = "");
+        (this.data.company = ""),(this.data.through_price = ""),(this.data.leave_price = ""),(this.data.resist_price = ""),(this.data.support_price = ""),(this.data.trend_high_price = ""),(this.data.trend_low_price = ""),(this.data.buy_expect_sum = "");
       },
       saveInterestItem: function(){
           axios({
@@ -153,10 +153,11 @@
             }, 
           }).then((response) => {
             console.log("Success", response);
-            alert("등록 완료")
+            alert("관심종목등록 완료")
+            this.$router.push('/').catch(()=>{})
             this.clearForm();
           }).catch((error) => {
-            alert("등록 에러")
+            alert("관심종목등록 실패")
             console.log("Failed to saveInterestItem", error.response);
           }); 
       }

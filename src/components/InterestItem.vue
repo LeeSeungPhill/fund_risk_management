@@ -1,162 +1,250 @@
 <template>
     <div class="close-image">
-        <v-container>
-            <v-row>
-                <v-col>종목코드</v-col>
-                <v-col>종목명</v-col>
-                <v-col>시가총액</v-col>
-                <v-col>현재가격</v-col>
-                <v-col>전일비거래량</v-col>
-                <v-col>돌파가격</v-col>
-                <v-col>이탈가격</v-col>
-                <v-col>저항가격</v-col>
-                <v-col>지지가격</v-col>
-                <v-col>추세상단가격</v-col>
-                <v-col>추세하단가격</v-col>
-                <v-col>매수예상금액</v-col>
-                <v-col>변경일자</v-col>
-            </v-row>
-            <v-row v-for="(item, index) in contents" v-bind:key="index">                
-                <v-col><div v-if="item.code==='0001'"><a @click="doInfo1('1001')">{{item.code}}</a></div><div v-else-if="item.code==='1001'"><a @click="doInfo1('2001')">{{item.code}}</a></div><div v-else><a @click="doInfo(item.code, item.name)">{{item.code}}</a></div></v-col>
-                <v-col><div v-if="item.code==='0001'"><a @click="minutesInfo1(item.code)">{{item.name}}</a></div><div v-else-if="item.code==='1001'"><a @click="minutesInfo1(item.code)">{{item.name}}</a></div><div v-else><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></div></v-col>
-                <v-col>{{item.total_market_value}}</v-col>
-                <v-col>{{item.stck_prpr}}</v-col>
-                <v-col>{{item.prdy_vol_rate}}</v-col>
-                <v-col v-show="!item.is_hidden1">
-                    <a @click="item.is_hidden1 = !item.is_hidden1;onlyItem(item, contents)"><div v-if="item.K_through_price==='1'" class="up1">{{item.through_price}}</div><div v-else>{{item.through_price}}</div></a>
-                </v-col>    
-                <v-col v-show="item.is_hidden1">                    
-                    <v-form>
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field v-model="data.through_price" label="돌파가격" ></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-btn @click="item.is_hidden1 = !item.is_hidden1;updateItem1(data, item.id, item.leave_price, item.resist_price, item.support_price, item.trend_high_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden1" color="#4CAF50">변경</v-btn>
-                                </v-col>   
-                            </v-row>
-                        </v-container>        
-                    </v-form>
+        <v-container fluid>
+            <v-row no-gutter>
+                <v-col align="left">
+                    <v-subheader>
+                        [관심 종목]    
+                    </v-subheader>
                 </v-col>
-                <v-col v-show="!item.is_hidden2">
-                    <a @click="item.is_hidden2 = !item.is_hidden2;onlyItem(item, contents)"><div v-if="item.D_leave_price==='1'" class="down1">{{item.leave_price}}</div><div v-else>{{item.leave_price}}</div></a>
+                <v-col align="right">
+                    <v-btn @click="runDelete()" style="background: #4c6351">[삭제]</v-btn>
                 </v-col>
-                <v-col v-show="item.is_hidden2">                    
-                    <v-form>
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field v-model="data.leave_price" label="이탈가격" ></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-btn @click="item.is_hidden2 = !item.is_hidden2;updateItem2(data, item.id, item.through_price, item.resist_price, item.support_price, item.trend_high_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden2" color="#4CAF50">변경</v-btn>
-                                </v-col>   
-                            </v-row>
-                        </v-container>        
-                    </v-form>
-                </v-col>
-                <v-col v-show="!item.is_hidden3">
-                    <a @click="item.is_hidden3 = !item.is_hidden3;onlyItem(item, contents)"><div v-if="item.K_resist_price==='1'" class="up2">{{item.resist_price}}</div><div v-else>{{item.resist_price}}</div></a>
-                </v-col>
-                <v-col v-show="item.is_hidden3">                    
-                    <v-form>
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field v-model="data.resist_price" label="저항가격" ></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-btn @click="item.is_hidden3 = !item.is_hidden3;updateItem3(data, item.id, item.through_price, item.leave_price, item.support_price, item.trend_high_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden3" color="#4CAF50">변경</v-btn>
-                                </v-col>   
-                            </v-row>
-                        </v-container>        
-                    </v-form>
-                </v-col>
-                <v-col v-show="!item.is_hidden4">
-                    <a @click="item.is_hidden4 = !item.is_hidden4;onlyItem(item, contents)"><div v-if="item.D_support_price==='1'" class="down2">{{item.support_price}}</div><div v-else>{{item.support_price}}</div></a>
-                </v-col>
-                <v-col v-show="item.is_hidden4">                    
-                    <v-form>
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field v-model="data.support_price" label="지지가격" ></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-btn @click="item.is_hidden4 = !item.is_hidden4;updateItem4(data, item.id, item.through_price, item.leave_price, item.resist_price, item.trend_high_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden4" color="#4CAF50">변경</v-btn>
-                                </v-col>   
-                            </v-row>
-                        </v-container>        
-                    </v-form>
-                </v-col>
-                <v-col v-show="!item.is_hidden5">
-                    <a @click="item.is_hidden5 = !item.is_hidden5;onlyItem(item, contents)"><div v-if="item.K_trend_high_price==='1'" class="up3">{{item.trend_high_price}}</div><div v-else>{{item.trend_high_price}}</div></a>
-                </v-col>
-                <v-col v-show="item.is_hidden5">                    
-                    <v-form>
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field v-model="data.trend_high_price" label="추세상단가격" ></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-btn @click="item.is_hidden5 = !item.is_hidden5;updateItem5(data, item.id, item.through_price, item.leave_price, item.resist_price, item.support_price, item.trend_low_price, item.buy_expect_sum);" v-show="item.is_hidden5" color="#4CAF50">변경</v-btn>
-                                </v-col>   
-                            </v-row>
-                        </v-container>        
-                    </v-form>
-                </v-col>
-                <v-col v-show="!item.is_hidden6">
-                    <a @click="item.is_hidden6 = !item.is_hidden6;onlyItem(item, contents)"><div v-if="item.D_trend_low_price==='1'" class="down3">{{item.trend_low_price}}</div><div v-else>{{item.trend_low_price}}</div></a>
-                </v-col>
-                <v-col v-show="item.is_hidden6">                    
-                    <v-form>
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field v-model="data.trend_low_price" label="추세하단가격" ></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-btn @click="item.is_hidden6 = !item.is_hidden6;updateItem6(data, item.id, item.through_price, item.leave_price, item.resist_price, item.support_price, item.trend_high_price, item.buy_expect_sum);" v-show="item.is_hidden6" color="#4CAF50">변경</v-btn>
-                                </v-col>   
-                            </v-row>
-                        </v-container>        
-                    </v-form>
-                </v-col>
-                <v-col v-show="!item.is_hidden7">
-                    <a @click="item.is_hidden7 = !item.is_hidden7;onlyItem(item, contents)"><div>{{item.buy_expect_sum}}</div></a>
-                </v-col>
-                <v-col v-show="item.is_hidden7">                    
-                    <v-form>
-                        <v-container>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field v-model="data.buy_expect_sum" label="매수예상금액" ></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-btn @click="item.is_hidden7 = !item.is_hidden7;updateItem7(data, item.id, item.through_price, item.leave_price, item.resist_price, item.support_price, item.trend_high_price, item.trend_low_price);" v-show="item.is_hidden7" color="#4CAF50">변경</v-btn>
-                                </v-col>   
-                            </v-row>
-                        </v-container>        
-                    </v-form>
-                </v-col>
-                <v-col>
-                    {{formatDate(item.last_chg_date)}}
-                    <v-btn @click="deleteItem(item.id)" color="#F44336">삭제</v-btn> 
-                </v-col>
-                
-            </v-row>
+            </v-row>    
+            <ag-grid-vue 
+                style="width: 100%; height: 300px;" 
+                class="ag-theme-balham" 
+                :columnDefs="colDefs" 
+                :rowData="rowData" 
+                :paginationAutoPageSize="true"
+                :pagination="true"
+                :defaultColDef="defaultColDef"
+                @cellClicked="onCellClicked"
+            />
         </v-container>
     </div>
 </template>
 <script>
+    import { ref, defineComponent } from 'vue';
     import axios from "axios";
-  
-    export default {
+    import {AgGridVue} from 'ag-grid-vue3';
+    import 'ag-grid-community/styles/ag-grid.css';
+    import 'ag-grid-community/styles/ag-theme-balham.css';
+    import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+    export default defineComponent({
+        name: 'App',
+        components:{
+            AgGridVue
+        },
+        setup(){
+
+        const defaultColDef = ref({
+            flex: 1,
+            minWidth: 100,
+            //editable: true,
+        });
+
+        const colDefs = ref([
+            {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
+            {headerName: '선택', field: 'chk', editable: true, cellRenderer:'agCheckboxCellRenderer', cellEditor: 'agCheckboxCellEditor'},
+            {headerName: '종목코드', field: 'code'},
+            {headerName: '종목명', field: 'name'},
+            {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},},
+            {headerName: '현재가', field: 'stck_prpr', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
+            {headerName: '돌파가격', field: 'through_price', valueSetter: params => {
+                
+                params.data.through_price = params.newValue;
+
+                axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                params:{
+                    id: params.data.id,
+                    through_price: params.newValue,
+                    leave_price: params.data.leave_price,
+                    resist_price: params.data.resist_price,
+                    support_price: params.data.support_price,
+                    trend_high_price: params.data.trend_high_price,
+                    trend_low_price: params.data.trend_low_price,
+                    buy_expect_sum: params.data.buy_expect_sum
+                }
+                
+                }).then(response => {
+                    console.log("Success", response)
+                }).catch(error => {
+                    alert("처리 에러")
+                    console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '이탈가격', field: 'leave_price', valueSetter: params => {
+                
+                params.data.leave_price = params.newValue;
+
+                axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                params:{
+                    id: params.data.id,
+                    through_price: params.data.through_price,
+                    leave_price: params.newValue,
+                    resist_price: params.data.resist_price,
+                    support_price: params.data.support_price,
+                    trend_high_price: params.data.trend_high_price,
+                    trend_low_price: params.data.trend_low_price,
+                    buy_expect_sum: params.data.buy_expect_sum
+                }
+                
+                }).then(response => {
+                    console.log("Success", response)
+                }).catch(error => {
+                    alert("처리 에러")
+                    console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '저항가격', field: 'resist_price', valueSetter: params => {
+                
+                params.data.resist_price = params.newValue;
+
+                axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                params:{
+                    id: params.data.id,
+                    through_price: params.data.through_price,
+                    leave_price: params.data.leave_price,
+                    resist_price: params.newValue,
+                    support_price: params.data.support_price,
+                    trend_high_price: params.data.trend_high_price,
+                    trend_low_price: params.data.trend_low_price,
+                    buy_expect_sum: params.data.buy_expect_sum
+                }
+                
+                }).then(response => {
+                    console.log("Success", response)
+                }).catch(error => {
+                    alert("처리 에러")
+                    console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '지지가격', field: 'support_price', valueSetter: params => {
+                
+                params.data.support_price = params.newValue;
+
+                axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                params:{
+                    id: params.data.id,
+                    through_price: params.data.through_price,
+                    leave_price: params.data.leave_price,
+                    resist_price: params.data.resist_price,
+                    support_price: params.newValue,
+                    trend_high_price: params.data.trend_high_price,
+                    trend_low_price: params.data.trend_low_price,
+                    buy_expect_sum: params.data.buy_expect_sum
+                }
+                
+                }).then(response => {
+                    console.log("Success", response)
+                }).catch(error => {
+                    alert("처리 에러")
+                    console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '추세상단가격', field: 'trend_high_price', valueSetter: params => {
+                
+                params.data.trend_high_price = params.newValue;
+
+                axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                params:{
+                    id: params.data.id,
+                    through_price: params.data.through_price,
+                    leave_price: params.data.leave_price,
+                    resist_price: params.data.resist_price,
+                    support_price: params.data.support_price,
+                    trend_high_price: params.newValue,
+                    trend_low_price: params.data.trend_low_price,
+                    buy_expect_sum: params.data.buy_expect_sum
+                }
+                
+                }).then(response => {
+                    console.log("Success", response)
+                }).catch(error => {
+                    alert("처리 에러")
+                    console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '추세하단가격', field: 'trend_low_price', valueSetter: params => {
+                
+                params.data.trend_low_price = params.newValue;
+
+                axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                params:{
+                    id: params.data.id,
+                    through_price: params.data.through_price,
+                    leave_price: params.data.leave_price,
+                    resist_price: params.data.resist_price,
+                    support_price: params.data.support_price,
+                    trend_high_price: params.data.trend_high_price,
+                    trend_low_price: params.newValue,
+                    buy_expect_sum: params.data.buy_expect_sum
+                }
+                
+                }).then(response => {
+                    console.log("Success", response)
+                }).catch(error => {
+                    alert("처리 에러")
+                    console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '매수예상금액', field: 'buy_expect_sum', valueSetter: params => {
+                
+                params.data.buy_expect_sum = params.newValue;
+
+                axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                params:{
+                    id: params.data.id,
+                    through_price: params.data.through_price,
+                    leave_price: params.data.leave_price,
+                    resist_price: params.data.resist_price,
+                    support_price: params.data.support_price,
+                    trend_high_price: params.data.trend_high_price,
+                    trend_low_price: params.data.trend_low_price,
+                    buy_expect_sum: params.newValue
+                }
+                
+                }).then(response => {
+                    console.log("Success", response)
+                }).catch(error => {
+                    alert("처리 에러")
+                    console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+        ]);
+
+        return {
+            defaultColDef,
+            colDefs
+        }
+        },
         data() {
             return {
-                contents: null,
+                rowData: [],
                 charturl: null,
                 data: {
                     through_price: "",
@@ -170,8 +258,100 @@
             };
         },
         methods : {
-            formatDate(str){
-                return str.split('T')[0];
+            onCellClicked: (e) =>{
+                let charturl = null;
+                
+                if(e.column.colId === 'code'){
+                    if(e.data.code === '0001' || e.data.code === '1001'){
+                        axios({
+                            method: "GET",
+                            url: "http://phills2.gonetis.com:8000/stockBalance/marketInfo/",
+                            params:{
+                                market: e.data.code.trim() === '0001' ? '1001' : '2001'
+                            }
+                                
+                        }).then(response => {
+                            console.log("Success", response)
+                            charturl = "http://phills2.gonetis.com:8000/stockBalance/"+response.data[0].market+"/"
+                            window.open(charturl, "", "_blank"); 
+                            charturl = null
+                        }).catch(error => {
+                            alert("처리 에러")
+                            console.log("Failed to kospiInfo", error.response);
+                        }); 
+                        if(charturl != null) 
+                            window.open(charturl, "", "_blank");
+                    }else{
+                        axios({
+                            method: "GET",
+                            url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+                            params:{
+                                code: e.data.code.trim(),
+                                company: e.data.name.trim(),
+                            }
+                                                
+                        }).then(response => {
+                            console.log("Success", response)
+                            charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+                            window.open(charturl, "", "_blank"); 
+                            charturl = null
+                        }).catch(error => {
+                            alert("처리 에러")
+                            console.log("Failed to doInfo", error.response);
+                        }); 
+                        if(charturl != null) 
+                            window.open(charturl, "", "_blank"); 
+                    }    
+                }
+                if(e.column.colId === 'name'){  
+                    if(e.data.code === '0001' || e.data.code === '1001'){
+                        axios({
+                        method: "GET",
+                        url: "http://phills2.gonetis.com:8000/stockBalance/marketMinutesInfo/",
+                        params:{
+                            market: e.data.code.trim(),
+                            app_key: e.data.app_key,
+                            app_secret: e.data.app_secret,
+                            access_token: e.data.access_token
+                        }
+                                    
+                        }).then(response => {
+                            console.log("Success", response)
+                            charturl = "http://phills2.gonetis.com:8000/stockBalance/minutes_"+response.data[0].market+"/"
+                            window.open(charturl, "", "_blank"); 
+                            charturl = null
+                        }).catch(error => {
+                            alert("처리 에러")
+                            console.log("Failed to kospiMinutesInfo", error.response);
+                        }); 
+                        if(charturl != null) 
+                            window.open(charturl, "", "_blank");
+
+                    }else{
+                        axios({
+                            method: "GET",
+                            url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
+                            params:{
+                                code: e.data.code.trim(),
+                                company: e.data.name.trim(),
+                                app_key: e.data.app_key,
+                                app_secret: e.data.app_secret,
+                                access_token: e.data.access_token
+                            }
+                                    
+                        }).then(response => {
+                            console.log("Success", response)
+                            charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+                            window.open(charturl, "", "_blank"); 
+                            charturl = null
+                        }).catch(error => {
+                            alert("처리 에러")
+                            console.log("Failed to minutesInfo", error.response);
+                        }); 
+                        if(charturl != null) 
+                            window.open(charturl, "", "_blank"); 
+                    }
+                }
             },
             fetchData: function(){
                 axios({
@@ -186,318 +366,37 @@
                 
                 }).then(response => {
                     console.log("Success", response.data)
-                    this.contents = response.data;
+                    this.rowData = response.data;
+                    this.rowData.forEach(data => {data.acct_no = this.$route.params.acct_no})
+                    this.rowData.forEach(data => {data.app_key = this.$route.params.app_key})
+                    this.rowData.forEach(data => {data.app_secret = this.$route.params.app_secret})
+                    this.rowData.forEach(data => {data.access_token = this.$route.params.access_token})
                 }).catch(error => {
                     alert("처리 에러")
                     console.log("Failed to fetchData", error.response);
                 });
             },    
-            doInfo(code, name){
-                axios({
-                    method: "GET",
-                    url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
-                    params:{
-                        code: code.trim(),
-                        company: name.trim(),
-                    }
-                        
-                }).then(response => {
-                    console.log("Success", response)
-                    this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
-                    window.open(this.charturl, "", "_blank"); 
-                    this.charturl = null
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to doInfo", error.response);
-                }); 
-                if(this.charturl != null) 
-                    window.open(this.charturl, "", "_blank"); 
+            runDelete: function(){
+                this.rowData.forEach(data =>{
+                    if(data.chk){
+                        axios({
+                            method: "DELETE",
+                            url: "http://phills2.gonetis.com:8000/kis/interestItem/" + data.id + "/", // http://phills2.gonetis.com:8000/kis/interestItem/1 로 delete 이벤트 전송
+                        }).then((response) => {
+                            console.log("Success", response);
+                            this.fetchData()
+                        }).catch((error) => {
+                        console.log("Failed to deleteItem", error.response);
+                        });
+                    } 
+                })
+
             },
-            doInfo1: function(market){
-                axios({
-                    method: "GET",
-                    url: "http://phills2.gonetis.com:8000/stockBalance/marketInfo/",
-                    params:{
-                        market: market
-                    }
-                        
-                }).then(response => {
-                    console.log("Success", response)
-                    this.charturl = "http://phills2.gonetis.com:8000/stockBalance/"+response.data[0].market+"/"
-                    window.open(this.charturl, "", "_blank"); 
-                    this.charturl = null
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to kospiInfo", error.response);
-                }); 
-                if(this.charturl != null) 
-                    window.open(this.charturl, "", "_blank"); 
-            },
-            minutesInfo(code, name){
-                axios({
-                    method: "GET",
-                    url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
-                    params:{
-                        code: code.trim(),
-                        company: name.trim(),
-                        app_key: this.$route.params.app_key,
-                        app_secret: this.$route.params.app_secret,
-                        access_token: this.$route.params.access_token
-                    }
-                    
-                }).then(response => {
-                    console.log("Success", response)
-                    this.charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
-                    window.open(this.charturl, "", "_blank"); 
-                    this.charturl = null
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to minutesInfo", error.response);
-                }); 
-                if(this.charturl != null) 
-                    window.open(this.charturl, "", "_blank"); 
-            },
-            minutesInfo1: function(market){
-                axios({
-                    method: "GET",
-                    url: "http://phills2.gonetis.com:8000/stockBalance/marketMinutesInfo/",
-                    params:{
-                        market: market,
-                        app_key: this.$route.params.app_key,
-                        app_secret: this.$route.params.app_secret,
-                        access_token: this.$route.params.access_token
-                    }
-                                
-                }).then(response => {
-                    console.log("Success", response)
-                    this.charturl = "http://phills2.gonetis.com:8000/stockBalance/minutes_"+response.data[0].market+"/"
-                    window.open(this.charturl, "", "_blank"); 
-                    this.charturl = null
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to kospiMinutesInfo", error.response);
-                }); 
-                if(this.charturl != null) 
-                    window.open(this.charturl, "", "_blank"); 
-            },
-            deleteItem: function(id){
-                axios({
-                    method: "DELETE",
-                    url: "http://phills2.gonetis.com:8000/kis/interestItem/" + id + "/", // http://phills2.gonetis.com:8000/kis/interestItem/1 로 delete 이벤트 전송
-                }).then((response) => {
-                    console.log("Success", response);
-                    this.fetchData()
-                }).catch((error) => {
-                console.log("Failed to deleteItem", error.response);
-                });
-            },
-            onlyItem: function(data, contents){
-                // 한개의 리스트만 보이도록
-                for (var index in contents){
-                    data.id != contents[index].id ? (contents[index].is_hidden = false) : "";
-                }
-            },
-            updateItem1: function(data, id, leave_price, resist_price, support_price, trend_high_price, trend_low_price, buy_expect_sum){
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    acct_no: this.$route.params.acct_no,
-                    app_key: this.$route.params.app_key,
-                    app_secret: this.$route.params.app_secret,
-                    access_token: this.$route.params.access_token,
-                    id: id,
-                    through_price: data.through_price,
-                    leave_price: leave_price,
-                    resist_price: resist_price,
-                    support_price: support_price,
-                    trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price,
-                    buy_expect_sum: buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                    this.data.through_price = ""
-                    this.contents = response.data;
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem1", error.response);
-                });
-            },
-            updateItem2: function(data, id, through_price, resist_price, support_price, trend_high_price, trend_low_price, buy_expect_sum){
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    acct_no: this.$route.params.acct_no,
-                    app_key: this.$route.params.app_key,
-                    app_secret: this.$route.params.app_secret,
-                    access_token: this.$route.params.access_token,                    
-                    id: id,
-                    through_price: through_price,
-                    leave_price: data.leave_price,
-                    resist_price: resist_price,
-                    support_price: support_price,
-                    trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price,
-                    buy_expect_sum: buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                    this.data.leave_price = ""
-                    this.contents = response.data;
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem2", error.response);
-                });
-            },
-            updateItem3: function(data, id, through_price, leave_price, support_price, trend_high_price, trend_low_price, buy_expect_sum){
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    acct_no: this.$route.params.acct_no,
-                    app_key: this.$route.params.app_key,
-                    app_secret: this.$route.params.app_secret,
-                    access_token: this.$route.params.access_token,                    
-                    id: id,
-                    through_price: through_price,
-                    leave_price: leave_price,
-                    resist_price: data.resist_price,
-                    support_price: support_price,
-                    trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price,
-                    buy_expect_sum: buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                    this.data.resist_price = ""
-                    this.contents = response.data;
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem3", error.response);
-                });
-            },
-            updateItem4: function(data, id, through_price, leave_price, resist_price, trend_high_price, trend_low_price, buy_expect_sum){
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    acct_no: this.$route.params.acct_no,
-                    app_key: this.$route.params.app_key,
-                    app_secret: this.$route.params.app_secret,
-                    access_token: this.$route.params.access_token,                    
-                    id: id,
-                    through_price: through_price,
-                    leave_price: leave_price,
-                    resist_price: resist_price,
-                    support_price: data.support_price,
-                    trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price,
-                    buy_expect_sum: buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                    this.data.support_price = ""
-                    this.contents = response.data;
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem4", error.response);
-                });
-            },  
-            updateItem5: function(data, id, through_price, leave_price, resist_price, support_price, trend_low_price, buy_expect_sum){
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    acct_no: this.$route.params.acct_no,
-                    app_key: this.$route.params.app_key,
-                    app_secret: this.$route.params.app_secret,
-                    access_token: this.$route.params.access_token,                    
-                    id: id,
-                    through_price: through_price,
-                    leave_price: leave_price,
-                    resist_price: resist_price,
-                    support_price: support_price,
-                    trend_high_price: data.trend_high_price,
-                    trend_low_price: trend_low_price,
-                    buy_expect_sum: buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                    this.data.trend_high_price = ""
-                    this.contents = response.data;
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem5", error.response);
-                });
-            },
-            updateItem6: function(data, id, through_price, leave_price, resist_price, support_price, trend_high_price, buy_expect_sum){
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    acct_no: this.$route.params.acct_no,
-                    app_key: this.$route.params.app_key,
-                    app_secret: this.$route.params.app_secret,
-                    access_token: this.$route.params.access_token,                    
-                    id: id,
-                    through_price: through_price,
-                    leave_price: leave_price,
-                    resist_price: resist_price,
-                    support_price: support_price,
-                    trend_high_price: trend_high_price,
-                    trend_low_price: data.trend_low_price,
-                    buy_expect_sum: buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                    this.data.trend_low_price = ""
-                    this.contents = response.data;
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem6", error.response);
-                });
-            },
-            updateItem7: function(data, id, through_price, leave_price, resist_price, support_price, trend_high_price, trend_low_price){
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    acct_no: this.$route.params.acct_no,
-                    app_key: this.$route.params.app_key,
-                    app_secret: this.$route.params.app_secret,
-                    access_token: this.$route.params.access_token,                    
-                    id: id,
-                    through_price: through_price,
-                    leave_price: leave_price,
-                    resist_price: resist_price,
-                    support_price: support_price,
-                    trend_high_price: trend_high_price,
-                    trend_low_price: trend_low_price,
-                    buy_expect_sum: data.buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                    this.data.buy_expect_sum = ""
-                    this.contents = response.data;
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem7", error.response);
-                });
-            },                                              
         },
         created() { 
             this.fetchData();
         }
-    }
+    });
 </script>
 <style scoped>
 .up1 {

@@ -1,20 +1,22 @@
 <template>
   <div>
     <v-container>
-        <v-row align="center">
-          <v-col>
+        <v-row>
+          <v-col align="center" colspan="2">
             <v-subheader>
               [장중 투자자별 매매 상위 - {{this.yyyy}} {{this.mm}} {{this.dd}} {{this.hour}} {{this.minute}} 기준]
             </v-subheader>
           </v-col>
-          <v-col>
+        </v-row>
+        <v-row>
+          <v-col colspan="2" align="center" >
+            [매매유형]
             <select v-model="selected1" @change="fetchData">
               <option v-for="(d, i) in options1" :key="i" :value="d.value">
                 {{ d.text }}
               </option>
             </select>
-          </v-col>
-          <v-col>
+            [시장구분]
             <select v-model="selected2" @change="fetchData">
               <option v-for="(d, i) in options2" :key="i" :value="d.value">
                 {{ d.text }}
@@ -23,49 +25,94 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
-            <v-row>
-              <v-col>종목코드</v-col>
-              <v-col>종목명</v-col>
-              <v-col>수급주체</v-col>
-              <v-col>순거래 합산</v-col>
-            </v-row>
-            <v-row v-for="(item, index) in contents1" v-bind:key="index">
-              <v-col><a @click="doInfo(item.code, item.name)">{{item.code}}</a></v-col>
-              <v-col><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></v-col>
-              <v-col>{{item.tr_subject}}</v-col>
-              <v-col>{{item.volumn}}</v-col>
-            </v-row>
+          <v-col align="left" >[기관]</v-col>
+          <v-col align="left" >[외국인]</v-col>
+        </v-row>  
+        <v-row>
+          <v-col align="center" >
+            <ag-grid-vue 
+                  style="width: 100%; height: 350px;" 
+                  class="ag-theme-balham" 
+                  :columnDefs="colDefs1" 
+                  :rowData="rowData1" 
+                  :paginationAutoPageSize="true"
+                  :pagination="true"
+                  :defaultColDef="defaultColDef1"
+                  @cellClicked="onCellClicked"
+            />
           </v-col>
-          <v-col>
-            <v-row>
-              <v-col>종목코드</v-col>
-              <v-col>종목명</v-col>
-              <v-col>수급주체</v-col>
-              <v-col>순거래 합산</v-col>
-            </v-row>
-            <v-row v-for="(item, index) in contents2" v-bind:key="index">
-              <v-col><a @click="doInfo(item.code, item.name)">{{item.code}}</a></v-col>
-              <v-col><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></v-col>
-              <v-col>{{item.tr_subject}}</v-col>
-              <v-col>{{item.volumn}}</v-col>
-            </v-row>
-          </v-col>
-          
+          <v-col align="center" >
+            <ag-grid-vue 
+                  style="width: 100%; height: 350px;" 
+                  class="ag-theme-balham" 
+                  :columnDefs="colDefs2" 
+                  :rowData="rowData2" 
+                  :paginationAutoPageSize="true"
+                  :pagination="true"
+                  :defaultColDef="defaultColDef2"
+                  @cellClicked="onCellClicked"
+            />
+          </v-col>  
         </v-row>
-        
+
     </v-container>      
   </div>
 </template>
 <script>
+  import { ref, defineComponent } from 'vue';
   import axios from "axios";
+  import {AgGridVue} from 'ag-grid-vue3';
+  import 'ag-grid-community/styles/ag-grid.css';
+  import 'ag-grid-community/styles/ag-theme-balham.css';
+  import 'ag-grid-community/styles/ag-theme-quartz.css';
 
-  export default {
-    data() {
+  export default defineComponent({
+  name: 'App',
+  components:{
+    AgGridVue
+  },
+  setup(){
+
+    const defaultColDef1 = ref({
+      flex: 1,
+      minWidth: 100,
+      //editable: true,
+    });
+
+    const defaultColDef2 = ref({
+      flex: 1,
+      minWidth: 100,
+      //editable: true,
+    });
+
+    const colDefs1 = ref([
+      {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
+      {headerName: '종목코드', field: 'code'},
+      {headerName: '종목명', field: 'name'},
+      {headerName: '수급주체', field: 'tr_subject'},
+      {headerName: '순거래합산', field: 'volumn', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+    ]);
+
+    const colDefs2 = ref([
+      {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
+      {headerName: '종목코드', field: 'code'},
+      {headerName: '종목명', field: 'name'},
+      {headerName: '수급주체', field: 'tr_subject'},
+      {headerName: '순거래합산', field: 'volumn', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+    ]);
+
+    return {
+      defaultColDef1,
+      colDefs1,
+      defaultColDef2,
+      colDefs2
+    }
+  },  
+  data() {
       return {
           result: null,
-          contents1: null,
-          contents2: null,
+          rowData1: [],
+          rowData2: [],
           yyyy: null,
           mm: null,
           dd: null,
@@ -90,6 +137,56 @@
         };
     },
     methods : {
+      onCellClicked: (e) =>{
+        let charturl = null;
+                  
+        if(e.column.colId === 'code'){
+          axios({
+            method: "GET",
+            url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+            params:{
+              code: e.data.code.trim(),
+              company: e.data.name.trim(),
+            }
+                                                  
+          }).then(response => {
+            console.log("Success", response)
+            charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+            window.open(charturl, "", "_blank"); 
+            charturl = null
+          }).catch(error => {
+            alert("처리 에러")
+            console.log("Failed to doInfo", error.response);
+          }); 
+          if(charturl != null) 
+            window.open(charturl, "", "_blank"); 
+        }    
+
+        if(e.column.colId === 'name'){  
+          axios({
+            method: "GET",
+            url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
+            params:{
+              code: e.data.code.trim(),
+              company: e.data.name.trim(),
+              app_key: e.data.app_key,
+              app_secret: e.data.app_secret,
+              access_token: e.data.access_token
+            }
+                                      
+          }).then(response => {
+            console.log("Success", response)
+            charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+            window.open(charturl, "", "_blank"); 
+            charturl = null
+          }).catch(error => {
+            alert("처리 에러")
+            console.log("Failed to minutesInfo", error.response);
+          }); 
+          if(charturl != null) 
+            window.open(charturl, "", "_blank"); 
+        }
+      },
       fetchData: function(){
         axios({
           method: "GET",
@@ -102,12 +199,16 @@
           
         }).then(response => {
           console.log("Success", response.data)
-          this.contents1 = response.data;
+          this.rowData1 = response.data;
           this.yyyy = response.data[0].tr_day.substr(0,4) + "년";
           this.mm = response.data[0].tr_day.substr(4,2) + "월";
           this.dd = response.data[0].tr_day.substr(6,2) + "일";
           this.hour = response.data[0].tr_time.substr(0,2) + "시";
           this.minute = response.data[0].tr_time.substr(2,2) + "분";
+          this.rowData1.forEach(data => {data.acct_no = this.$route.params.acct_no})
+          this.rowData1.forEach(data => {data.app_key = this.$route.params.app_key})
+          this.rowData1.forEach(data => {data.app_secret = this.$route.params.app_secret})
+          this.rowData1.forEach(data => {data.access_token = this.$route.params.access_token})
         }).catch(error => {
           alert("처리 에러")
           console.log("Failed to fetchData", error.response);
@@ -123,62 +224,21 @@
           
         }).then(response => {
           console.log("Success", response.data)
-          this.contents2 = response.data;
+          this.rowData2 = response.data;
+          this.rowData2.forEach(data => {data.acct_no = this.$route.params.acct_no})
+          this.rowData2.forEach(data => {data.app_key = this.$route.params.app_key})
+          this.rowData2.forEach(data => {data.app_secret = this.$route.params.app_secret})
+          this.rowData2.forEach(data => {data.access_token = this.$route.params.access_token})
         }).catch(error => {
           alert("처리 에러")
           console.log("Failed to fetchData", error.response);
         });
       },
-      doInfo(code, name){
-        axios({
-            method: "GET",
-            url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
-            params:{
-              code: code.trim(),
-              company: name.trim(),
-            }
-            
-          }).then(response => {
-            console.log("Success", response)
-            this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
-            window.open(this.charturl, "", "_blank"); 
-            this.charturl = null
-          }).catch(error => {
-            alert("처리 에러")
-            console.log("Failed to doInfo", error.response);
-          }); 
-        if(this.charturl != null) 
-            window.open(this.charturl, "", "_blank"); 
-      },
-      minutesInfo(code, name){
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
-          params:{
-            code: code.trim(),
-            company: name.trim(),
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-                    
-        }).then(response => {
-          console.log("Success", response)
-          this.charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
-          window.open(this.charturl, "", "_blank"); 
-          this.charturl = null
-        }).catch(error => {
-          alert("처리 에러")
-          console.log("Failed to minutesInfo", error.response);
-        }); 
-        if(this.charturl != null) 
-          window.open(this.charturl, "", "_blank"); 
-      },
     },
     created() { 
       this.fetchData();
     }
-  }
+  });
 </script>
   
 

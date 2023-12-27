@@ -1,53 +1,72 @@
 <template>
   <div>
-    <v-container>
-        <v-row align="center">
-          <v-col>
-            <v-subheader>
-              [자산 관리]
-            </v-subheader>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>자산번호</v-col>
-          <v-col>승률</v-col>
-          <v-col>현금비중</v-col>
-          <v-col>현금비중액</v-col>
-          <v-col>총평가금액</v-col>
-          <v-col>잔고금액</v-col>
-          <v-col>총예수금</v-col>
-          <v-col>가정산금</v-col>
-          <v-col>전일비증감</v-col>
-          <v-col>순자산금</v-col>
-          <v-col>매도예정</v-col>
-          <v-col>매수예정</v-col>
-        </v-row>
-        <v-row v-for="item in contents" v-bind:key="item.asset_num">
-          <v-col>{{item.asset_num}}</v-col>
-          <v-col>{{item.market_ratio}}</v-col>
-          <v-col>{{item.cash_rate}}</v-col>
-          <v-col>{{item.cash_rate_amt}}</v-col>
-          <v-col>{{item.tot_evlu_amt}}</v-col>
-          <v-col>{{item.scts_evlu_amt}}</v-col>
-          <v-col>{{item.dnca_tot_amt}}</v-col>
-          <v-col>{{item.prvs_rcdl_excc_amt}}</v-col>
-          <v-col>{{item.asset_icdc_amt}}</v-col>
-          <v-col>{{item.nass_amt}}</v-col>
-          <v-col>{{item.sell_plan_amt}}</v-col>
-          <v-col>{{item.buy_plan_amt}}</v-col>
-        </v-row>
+    <v-container fluid>
+      <v-row>
+        <v-col align="center">
+          <v-subheader>
+            [자산 관리]
+          </v-subheader>
+        </v-col>
+      </v-row>
+      <ag-grid-vue 
+        style="width: 100%; height: 300px;" 
+        class="ag-theme-balham" 
+        :columnDefs="colDefs" 
+        :rowData="rowData" 
+        :paginationAutoPageSize="true"
+        :pagination="true"
+        :defaultColDef="defaultColDef"
+      />  
     </v-container>  
   </div>
 </template>
 <script>
+import { ref, defineComponent } from 'vue';
 import axios from "axios";
+import {AgGridVue} from 'ag-grid-vue3';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 let url = "http://phills2.gonetis.com:8000/stockFundMng/list/"; //장고 서버 주소
 
-export default {
+export default defineComponent({
+  name: 'App',
+  components:{
+    AgGridVue
+  },
+  setup(){
+
+    const defaultColDef = ref({
+      flex: 1,
+      minWidth: 100,
+      //editable: true,
+    });
+
+    const colDefs = ref([
+      {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
+      {headerName: '자산번호', field: 'asset_num'},
+      {headerName: '승률', field: 'market_ratio', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
+      {headerName: '현금비중', field: 'cash_rate',valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
+      {headerName: '현금비중액', field: 'cash_rate_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '총평가금액', field: 'tot_evlu_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '잔고금액', field: 'scts_evlu_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '총예수금', field: 'dnca_tot_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '가정산금', field: 'prvs_rcdl_excc_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '전일비증감', field: 'asset_icdc_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '순자산금', field: 'nass_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '매도예정', field: 'sell_plan_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '매수예정', field: 'buy_plan_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+    ]);
+
+    return {
+      defaultColDef,
+      colDefs
+    }
+  },
   data() {
     return {
-      contents: null
+      rowData: []
     }
   },
   methods: {
@@ -67,7 +86,7 @@ export default {
     })
     .then(response => {
       console.log('fundMng:', response.data)
-      this.contents = response.data;
+      this.rowData = response.data;
     })
     .catch(error => {
       console.log(error)
@@ -79,5 +98,5 @@ export default {
   }
 
    
-};
+});
 </script>

@@ -1,207 +1,265 @@
 <template>
-<div>
-    <v-container fluid>
-        <v-row align="center" no-gutter>
-            <v-col>
-              <v-subheader>
+  <div>
+      <v-container fluid>
+          <v-row no-gutter>
+              <v-col align="right">
+                <v-subheader>
+                  [종목 검색]
+                </v-subheader>
+              </v-col>
+              <v-col align="right">
                 <v-btn @click="runStockSearch('0')" style="background: rgb(255, 0, 195)">[거래폭발]</v-btn>
                 <v-btn @click="runStockSearch('1')" style="background: rgb(195, 0, 255)">[단기추세]</v-btn>
                 <v-btn @click="runStockSearch('2')" style="background: rgb(135, 0, 135)">[투자혁명]</v-btn>
-              </v-subheader>
-            </v-col>
-        </v-row>    
-        <v-row align="center" no-gutter>      
-            <v-col>
-                [검색일자]
-                <Datepicker v-model="picked" :locale="locale" :weekStartsOn="0" :inputFormat="inputFormat" :clearable="true"/>
-            </v-col>
-            <v-col>
-                [검색명]<br />
-                <select v-model="selected1" @change="fetchData()">
-                    <option v-for="(d, i) in options1" :key="i" :value="d.value">
-                    {{ d.text }}
-                    </option>
-                </select>
-            </v-col>
-            <v-col>
-                [종목명]<br />
-                <input type="text" @change="input"/>
-                <button @click="fetchData">검색 수행</button>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-              <v-row>
-                <v-col>검색일시</v-col>
-                <v-col>검색명</v-col>
-                <v-col>종목코드</v-col>
-                <v-col>종목명</v-col>
-                <v-col>현재가</v-col>
-                <v-col>고가</v-col>
-                <v-col>저가</v-col>
-                <v-col>등락률</v-col>
-                <v-col>거래량</v-col>
-                <v-col>거래량비율</v-col>
-                <v-col>시가총액</v-col>
-              </v-row>
-              <v-row v-for="(item, index) in contents1" v-bind:key="index">
-                <v-col>{{item.search_dtm}}</v-col>
-                <v-col>{{item.search_name}}</v-col>
-                <v-col><a @click="doInfo(item.code, item.name)">{{item.code}}</a></v-col>
-                <v-col><a @click="minutesInfo(item.code, item.name)">{{item.name}}</a></v-col>
-                <v-col>{{item.current_price}}</v-col>
-                <v-col>{{item.high_price}}</v-col>
-                <v-col>{{item.low_price}}</v-col>
-                <v-col>{{item.day_rate}}</v-col>
-                <v-col>{{item.volumn}}</v-col>
-                <v-col>{{item.volumn_rate}}</v-col>
-                <v-col>{{item.market_total_sum}}</v-col>
-              </v-row>
-            </v-col>
+              </v-col>
+          </v-row>    
+          <v-row no-gutter>      
+              <v-col align="left">
+                  [검색일자]
+                  <Datepicker v-model="picked" :locale="locale" :weekStartsOn="0" :inputFormat="inputFormat" :clearable="true"/>
+              </v-col>
+              <v-col align="right">    
+                  [검색조건]
+                  <select v-model="selected1" @change="fetchData()">
+                      <option v-for="(d, i) in options1" :key="i" :value="d.value">
+                      {{ d.text }}
+                      </option>
+                  </select>
+                  [종목명]
+                  <input type="text" @change="input"/>
+                  <button @click="fetchData">찾기</button>
+              </v-col>
+          </v-row>
+          <v-row>
+              <v-col>
+                <ag-grid-vue 
+                  style="width: 100%; height: 300px;" 
+                  class="ag-theme-balham" 
+                  :columnDefs="colDefs" 
+                  :rowData="rowData" 
+                  :paginationAutoPageSize="true"
+                  :pagination="true"
+                  :defaultColDef="defaultColDef"
+                  :enableBrowserTooltips="true"
+                  @cellClicked="onCellClicked"
+                />
+              </v-col>
+          </v-row>
+      </v-container>
+  </div>    
+  </template>
+  <script>
+    import Datepicker from 'vue3-datepicker';
+    import { ref, reactive, onBeforeMount, defineComponent } from 'vue';
+    import {ko} from 'date-fns/locale';
+    import axios from "axios";
+    import {AgGridVue} from 'ag-grid-vue3';
+    import 'ag-grid-community/styles/ag-grid.css';
+    import 'ag-grid-community/styles/ag-theme-balham.css';
+    import 'ag-grid-community/styles/ag-theme-quartz.css';
+  
+    export default defineComponent({
+      name: 'App',
+      components:{
+        Datepicker,   
+        AgGridVue,
+      },
+      setup(){
+        const picked = ref(new Date());
+        const locale = reactive(ko);
+        const inputFormat = ref('yyyy-MM-dd');
+        
+        const defaultColDef = ref({
+          flex: 1,
+          //editable: true,
+          minWidth: 100,
+        });
+  
+        onBeforeMount(() => {});
+        
+        const colDefs = ref([
+            /* {headerName: 'No', field: 'no'}, */
+            {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
+            {headerName: '검색일시', field: 'search_dtm', tolltipField: 'search_dtm', },
+            {headerName: '검색명', field: 'search_name',},
+            {headerName: '종목코드', field: 'code', /* onCellClicked: (event) => {
+              axios({
+                method: "GET",
+                url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+                params:{
+                  code: event.node.data.code.trim(),
+                  company: event.node.data.name.trim(),
+                }
+                              
+              }).then(response => {
+                console.log("Success", response)
+                charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+                window.open(charturl, "", "_blank"); 
+                charturl = null
+              }).catch(error => {
+                alert("처리 에러")
+                console.log("Failed to doInfo", error.response);
+              }); 
+              if(charturl != null) 
+                window.open(charturl, "", "_blank"); 
+            }, */},
+            {headerName: '종목명', field: 'name',},
+            {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '고가', field: 'high_price', editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '저가', field: 'low_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            {headerName: '등락률', field: 'day_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
+            {headerName: '거래량', field: 'volumn', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+            {headerName: '거래량비율', field: 'volumn_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
+            {headerName: '시가총액', field: 'market_total_sum', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},},
+        ]);
+  
+        return {
+          picked,
+          locale,
+          inputFormat,
+          defaultColDef,
+          colDefs,
+        }
+      },
+      data() {
+        return {
+            rowData: [],
+            selected1: '거래폭발',
+            inputText: '',
+            columnApi: null,
             
-        </v-row>
-    </v-container>
-</div>    
-</template>
-<script>
-  import Datepicker from 'vue3-datepicker';
-  import { ref, reactive, defineComponent } from 'vue';
-  import {ko} from 'date-fns/locale';
-  import axios from "axios";
-
-  export default defineComponent({
-    name: 'App',
-    components:{
-      Datepicker,   
-    },
-    setup(){
-      const picked = ref(new Date());
-      const locale = reactive(ko);
-      const inputFormat = ref('yyyy-MM-dd');
-
-      return {
-        picked,
-        locale,
-        inputFormat,
-      }
-    },
-    data() {
-      return {
-          contents1: null,
-          selected1: '거래폭발',
-          inputText:'',
-          options1: [
-            { text: '거래폭발', value: '거래폭발' },
-            { text: '단기추세', value: '단기추세' },          
-            { text: '투자혁명', value: '투자혁명' }
-          ],
-          data: {
-            search_day: null,
-            search_name: null,
-            name: null,
-          }
-        };
-    },
-    methods : {
-      runStockSearch: function(id) { 
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/runStockSearch/",
-          params: {
-            search_choice: id,
-            acct_no: this.$route.params.acct_no,
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-        }).then(response => {
-          console.log("Success", response)
-          alert("종목검색 완료")
-          this.contents1 = response.data;
-        }).catch(error => {
-          alert("종목검색 에러")
-          console.log("Failed to get StockFundMng", error.response);
-        });
+            options1: [
+              { text: '거래폭발', value: '거래폭발' },
+              { text: '단기추세', value: '단기추세' },          
+              { text: '투자혁명', value: '투자혁명' }
+            ],
+            data: {
+              search_day: null,
+              search_name: null,
+              name: null,
+            }
+          };
       },
-      fetchData: function(){
-        const date1 = new Date(this.picked);
-        let year = date1.getFullYear();
-        let month = date1.getMonth() < 10 ? '0' + date1.getMonth()+1 : date1.getMonth()+1
-        let day = date1.getDate() < 10 ? '0' + date1.getDate() : date1.getDate()
-
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/stockSearch/",
-          params:{
-            search_day: year.toString()+month.toString()+day.toString(),
-            search_name: this.selected1,
-            name: this.inputText
-          }
-          
-        }).then(response => {
-          console.log("Success", response.data)
-          this.contents1 = response.data;
-        }).catch(error => {
-          alert("처리 에러")
-          console.log("Failed to fetchData", error.response);
-        });
+      computed: {
+  
       },
-      input(e){
-        return this.inputText = e.target.value
-        //input에 입력된 값을 inputText로 넣어주기
+      beforemount () {
+  
       },
-      doInfo(code, name){
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
-          params:{
-            code: code.trim(),
-            company: name.trim(),
+      methods : {
+        onCellClicked: (e) =>{
+          let charturl = null;
+  
+          if(e.column.colId === 'code'){
+            axios({
+              method: "GET",
+              url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+              params:{
+                code: e.data.code.trim(),
+                company: e.data.name.trim(),
+              }
+                              
+            }).then(response => {
+              console.log("Success", response)
+              charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+              window.open(charturl, "", "_blank"); 
+              charturl = null
+            }).catch(error => {
+              alert("처리 에러")
+              console.log("Failed to doInfo", error.response);
+            }); 
+            if(charturl != null) 
+              window.open(charturl, "", "_blank"); 
           }
+          if(e.column.colId === 'name'){  
+            axios({
+              method: "GET",
+              url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
+              params:{
+                code: e.data.code.trim(),
+                company: e.data.name.trim(),
+                app_key: e.data.app_key,
+                app_secret: e.data.app_secret,
+                access_token: e.data.access_token
+              }
                         
-        }).then(response => {
-          console.log("Success", response)
-          this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
-          window.open(this.charturl, "", "_blank"); 
-          this.charturl = null
-        }).catch(error => {
-          alert("처리 에러")
-          console.log("Failed to doInfo", error.response);
-        }); 
-        if(this.charturl != null) 
-          window.open(this.charturl, "", "_blank"); 
-      },
-      minutesInfo(code, name){
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
-          params:{
-            code: code.trim(),
-            company: name.trim(),
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-                    
-        }).then(response => {
-          console.log("Success", response)
-          this.charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
-          window.open(this.charturl, "", "_blank"); 
-          this.charturl = null
-        }).catch(error => {
-          alert("처리 에러")
-          console.log("Failed to minutesInfo", error.response);
-        }); 
-        if(this.charturl != null) 
-          window.open(this.charturl, "", "_blank"); 
-      },
-      created() { 
-        this.fetchData();
+            }).then(response => {
+              console.log("Success", response)
+              charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+              window.open(charturl, "", "_blank"); 
+              charturl = null
+            }).catch(error => {
+              alert("처리 에러")
+              console.log("Failed to minutesInfo", error.response);
+            }); 
+            if(charturl != null) 
+              window.open(charturl, "", "_blank"); 
+          }  
+        },
+  
+        runStockSearch: function(id) { 
+          axios({
+            method: "GET",
+            url: "http://phills2.gonetis.com:8000/stockOrder/runStockSearch/",
+            params: {
+              search_choice: id,
+              acct_no: this.$route.params.acct_no,
+              app_key: this.$route.params.app_key,
+              app_secret: this.$route.params.app_secret,
+              access_token: this.$route.params.access_token
+            }
+          }).then(response => {
+            console.log("Success", response)
+            alert("종목검색 완료")
+            this.rowData = response.data;
+            let seqno = 1
+            this.rowData.forEach(data => {data.no = seqno++})
+            this.rowData.forEach(data => {data.acct_no = this.$route.params.acct_no})
+            this.rowData.forEach(data => {data.app_key = this.$route.params.app_key})
+            this.rowData.forEach(data => {data.app_secret = this.$route.params.app_secret})
+            this.rowData.forEach(data => {data.access_token = this.$route.params.access_token})
+          }).catch(error => {
+            alert("종목검색 에러")
+            console.log("Failed to get StockFundMng", error.response);
+          });
+        },
+        fetchData: function(){
+          const date1 = new Date(this.picked);
+          let year = date1.getFullYear();
+          let month = date1.getMonth() < 10 ? '0' + date1.getMonth()+1 : date1.getMonth()+1
+          let day = date1.getDate() < 10 ? '0' + date1.getDate() : date1.getDate()
+  
+          axios({
+            method: "GET",
+            url: "http://phills2.gonetis.com:8000/stockOrder/stockSearch/",
+            params:{
+              search_day: year.toString()+month.toString()+day.toString(),
+              search_name: this.selected1,
+              name: this.inputText
+            }
+            
+          }).then(response => {
+            console.log("Success", response.data)
+            this.rowData = response.data;
+            let seqno = 1
+            this.rowData.forEach(data => {data.no = seqno++})
+            this.rowData.forEach(data => {data.acct_no = this.$route.params.acct_no})
+            this.rowData.forEach(data => {data.app_key = this.$route.params.app_key})
+            this.rowData.forEach(data => {data.app_secret = this.$route.params.app_secret})
+            this.rowData.forEach(data => {data.access_token = this.$route.params.access_token})
+          }).catch(error => {
+            alert("처리 에러")
+            console.log("Failed to fetchData", error.response);
+          });
+        },
+        input(e){
+          return this.inputText = e.target.value
+          //input에 입력된 값을 inputText로 넣어주기
+        },
+        created() { 
+          this.fetchData();
+        }
       }
-    }
-  });
-
-  
-  
-  
-</script>
+    });
+    
+  </script>

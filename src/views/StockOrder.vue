@@ -1,570 +1,438 @@
 <template>
-    <div>
-      <v-container fluid>
-        <v-row align="center">
-          <v-col cols="1">
-            <v-subheader>
-              [주문]
-            </v-subheader>
-          </v-col>
-          <v-col cols="1">
-            <select v-model="selected">
-              <option v-for="(d, i) in options" :key="i" :value="d.value">
-                {{ d.text }}
-              </option>
-            </select>
-          </v-col>
-          <v-col cols="4" v-if="selected === 'B'">
-            <label><input type="radio" value="limit" v-model="radioSel">주문가</label>
-            <label>&nbsp;&nbsp;&nbsp;</label>
-            <label><input type="radio" value="market" v-model="radioSel">시장가</label>
-            <label>&nbsp;&nbsp;&nbsp;</label>
-            <label><input type="radio" value="bflow" v-model="radioSel">시장흐름정액</label>
-            <label>&nbsp;&nbsp;&nbsp;</label>
-            <label><input type="radio" value="loss" v-model="radioSel">종목손실금액</label>
-          </v-col>
-          <v-col cols="4" v-if="selected === 'S'">
-            <label><input type="radio" value="limit" v-model="radioSel">주문가</label>
-            <label>&nbsp;&nbsp;&nbsp;</label>
-            <label><input type="radio" value="market" v-model="radioSel">시장가</label>
-            <label>&nbsp;&nbsp;&nbsp;</label>
-            <label><input type="radio" value="sflow" v-model="radioSel">시장기준수량</label>
-            <label>&nbsp;&nbsp;&nbsp;</label>
-            <label><input type="radio" value="half" v-model="radioSel">보유물량절반</label>
-          </v-col>
-        </v-row>
-        <v-row v-if="selected === 'B'">
-          <v-col cols="1" md="5">
-            <v-text-field v-model="data.code" :counter="6" label="종목코드" required></v-text-field>
-          </v-col>
-          <v-col cols="1" md="5">
-            <v-text-field v-model="data.name" label="종목명" required></v-text-field>
-          </v-col>    
-          <v-col v-show="radioSel != 'market'" cols="1" md="5">
-            <v-text-field v-model="data.buy_price" label="주문단가" ></v-text-field>
-          </v-col>    
-          <v-col v-show="radioSel === 'limit' || radioSel === 'market'" cols="1" md="5">
-            <v-text-field v-model="data.buy_amount" label="주문수량" ></v-text-field>
-          </v-col>
-          <v-col cols="1" md="5">
-            <v-text-field v-model="data.loss_price" label="손절가" ></v-text-field>
-          </v-col>
-          <v-col cols="1" md="5">
-            <v-text-field v-model="data.target_price" label="목표가" ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row v-if="selected === 'S'">
-          <v-col cols="1" md="5">
-            <v-text-field v-model="data.code" :counter="6" label="종목코드" required></v-text-field>
-          </v-col>
-          <v-col cols="1" md="5">
-            <v-text-field v-model="data.name" label="종목명" required></v-text-field>
-          </v-col>    
-          <v-col v-show="radioSel != 'market'" cols="1" md="5">
-            <v-text-field v-model="data.sell_price" label="매도단가" ></v-text-field>
-          </v-col>    
-          <v-col v-show="radioSel === 'limit' || radioSel === 'market'" cols="1" md="5">
-            <v-text-field v-model="data.sell_amount" label="매도수량" ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-btn @click="clearForm" style="background: gray">초기화</v-btn>
-            <v-btn @click="sendForm" style="background: mediumaquamarine">저장</v-btn>
-            <v-btn @click="sendOrderList" style="background: red">전송</v-btn>
-            <v-btn @click="reload()" style="background: skyblue">주문갱신</v-btn>
-            <v-btn @click="openPopup1()" style="background: pink">종목시세</v-btn>            
-            <v-btn @click="openPopup2()" style="background: orange">수급잠정</v-btn>
-            <v-btn @click="openPopup3()" style="background: sienna">관심종목</v-btn>
-            <v-btn @click="openPopup4()" style="background: rgb(125, 160, 45)">종목검색</v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
-    <div class="popup-view" :class="{active: popupView1}">
-      <pop-up1 @close-popup="openPopup1()"></pop-up1>
-    </div>
-    <div class="popup-view" :class="{active: popupView2}">
-      <pop-up2 @close-popup="openPopup2()"></pop-up2>
-    </div>
-    <div class="popup-view" :class="{active: popupView3}">
-      <pop-up3 @close-popup="openPopup3()"></pop-up3>
-    </div>
-    <div class="popup-view" :class="{active: popupView4}">
-      <pop-up4 @close-popup="openPopup4()"></pop-up4>
-    </div>    
-    <div>
-      <v-container fluid>
-        <v-row align="center">
-          <v-col cols="20">
-            <v-subheader>
-              [일별 주문 내역]
-            </v-subheader>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="1">종목코드</v-col>
-          <v-col cols="1">종목명</v-col>
-          <v-col cols="1">매수가</v-col>
-          <v-col cols="1">매수량</v-col>
-          <v-col cols="1">매도가</v-col>
-          <v-col cols="1">매도량</v-col>
-          <v-col cols="1">손절가</v-col>
-          <v-col cols="1">목표가</v-col>
-          <v-col cols="1">매매유형</v-col>
-          <v-col cols="1">주문상태</v-col>
-          <v-col cols="1">체결량</v-col>
-          <v-col cols="1">잔여량</v-col>
-          <v-col cols="1"></v-col>
-          <v-col cols="1"></v-col>
-          <v-col cols="2"></v-col>
-        </v-row>
-        <v-row v-for="(item, index) in StockOrderList" v-bind:key="index">
-          <v-col cols="1">{{item.code}}</v-col>
-          <v-col cols="1">{{item.name}}</v-col>
-          <v-col cols="1">{{item.buy_price}}</v-col>
-          <v-col cols="1">{{item.buy_amount}}</v-col>
-          <v-col cols="1">{{item.sell_price}}</v-col>
-          <v-col cols="1">{{item.sell_amount}}</v-col>
-          <v-col cols="1">{{item.loss_price}}</v-col>
-          <v-col cols="1">{{item.target_price}}</v-col>
-          <v-col cols="1">{{item.trading_type}}</v-col>
-          <v-col cols="1">{{item.order_stat}}</v-col>
-          <v-col cols="1">{{item.total_complete_qty }}</v-col>
-          <v-col cols="1">{{item.remain_qty }}</v-col>
-          <v-col cols="1" v-if="item.proc_yn === 'N'">
-            <v-btn @click="deleteOrder(item.id)" color="#F44336">삭제</v-btn> 
-          </v-col>
-          <v-col cols="1" v-if="item.remain_qty > 0 && item.order_stat != '04'">
-            <v-btn @click="item.is_hidden = !item.is_hidden;onlyStockOrder(item, StockOrderList)" color="gray">변경</v-btn>
-            <v-btn v-if="item.trading_type === 'B'" @click="cancelOrder(item.id, item.order_no, item.buy_price, item.remain_qty)" color="gray">취소</v-btn> 
-            <v-btn v-if="item.trading_type === 'S'" @click="cancelOrder(item.id, item.order_no, item.sell_price, item.remain_qty)" color="gray">취소</v-btn> 
-          </v-col>
-          <v-col cols="2">
-            <v-form v-show="item.is_hidden">
-              <v-container>
-                <v-row v-if="item.trading_type === 'B'">
-                  <v-col>
-                    <v-text-field v-model="data.buy_price" label="주문단가" ></v-text-field>
-                  </v-col>    
-                  <v-col>
-                    <v-btn @click="item.is_hidden = !item.is_hidden;updateBuyOrder(data, item.id, item.order_no, item.remain_qty);" v-show="item.is_hidden" color="#4CAF50">전송</v-btn>
-                  </v-col>   
-                </v-row>
-                <v-row v-if="item.trading_type === 'S'">
-                  <v-col>
-                    <v-text-field v-model="data.sell_price" label="매도단가" ></v-text-field>
-                  </v-col>    
-                  <v-col>
-                    <v-btn @click="item.is_hidden = !item.is_hidden;updateSellOrder(data, item.id, item.order_no, item.remain_qty);" v-show="item.is_hidden" color="#4CAF50">전송</v-btn>
-                  </v-col>   
-                </v-row>
-              </v-container>
-            </v-form>
-          </v-col>
-        </v-row>  
-      </v-container>
-    </div>
-    <div>
-      <v-container fluid>
-        <v-row align="center">
-          <v-col cols="11">
-            <v-subheader>
-              [일별 주문 체결]
-            </v-subheader>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>주문번호</v-col>
-          <v-col>원주문번호</v-col>
-          <v-col>주문구분</v-col>
-          <v-col>주문일자</v-col>
-          <v-col>주문시각</v-col>
-          <v-col>종목명</v-col>
-          <v-col>주문가</v-col>
-          <v-col>주문수량</v-col>
-          <v-col>총체결수량</v-col>
-          <v-col>잔여수량</v-col>
-          <v-col>총체결금액</v-col>
-        </v-row>
-        <v-row v-for="(item, index) in OrderCompleteList" v-bind:key="index">
-          <v-col>{{item.order_no}}</v-col>
-          <v-col>{{item.org_order_no}}</v-col>
-          <v-col>{{item.order_type}}</v-col>
-          <v-col>{{item.order_dt}}</v-col>
-          <v-col>{{item.order_tmd}}</v-col>
-          <v-col>{{item.name}}</v-col>
-          <v-col>{{item.order_price}}</v-col>
-          <v-col>{{item.order_amount}}</v-col>
-          <v-col>{{item.total_complete_qty}}</v-col>
-          <v-col>{{item.remain_qty}}</v-col>
-          <v-col>{{item.total_complete_amt}}</v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-btn @click="sendLevel(1)" style="background: lightyellow">[하락지속 기술적반등]</v-btn>
-            <v-btn @click="sendLevel(2)" style="background: lightsteelblue">[단기추세 기술적반등]</v-btn>
-            <v-btn @click="sendLevel(3)" style="background: greenyellow">[패턴 기술적반등]</v-btn>
-            <v-btn @click="sendLevel(4)" style="background: greenyellow">[추세전환 눌림반등]</v-btn>
-            <v-btn @click="sendLevel(5)" style="background: greenyellow">[상승지속 기술적반등]</v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>  
+  <div>
+    <v-container fluid>
+      <v-row>
+        <v-col>
+          <v-btn @click="reload()" style="background: skyblue">재조회</v-btn>
+          <v-btn @click="sendOrderList" style="background: rgb(101, 126, 234)">주문전송</v-btn>
+          <v-btn @click="openPopup1()" style="background: rgb(102, 174, 205)">주문등록</v-btn>
+          <v-btn @click="openPopup2()" style="background: pink">종목정보</v-btn>            
+          <v-btn @click="openPopup3()" style="background: orange">장중동향</v-btn>
+          <v-btn @click="openPopup4()" style="background: sienna">관심종목</v-btn>
+          <v-btn @click="openPopup5()" style="background: rgb(125, 160, 45)">종목검색</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+  <div class="popup-view" :class="{active: popupView1}">
+    <pop-up1 @close-popup="openPopup1()"></pop-up1>
+  </div>
+  <div class="popup-view" :class="{active: popupView2}">
+    <pop-up2 @close-popup="openPopup2()"></pop-up2>
+  </div>
+  <div class="popup-view" :class="{active: popupView3}">
+    <pop-up3 @close-popup="openPopup3()"></pop-up3>
+  </div>
+  <div class="popup-view" :class="{active: popupView4}">
+    <pop-up4 @close-popup="openPopup4()"></pop-up4>
+  </div>
+  <div class="popup-view" :class="{active: popupView5}">
+    <pop-up5 @close-popup="openPopup5()"></pop-up5>
+  </div>
+  <div>
+    <v-container fluid>
+      <v-row>
+        <v-col align="left">
+          <v-subheader>
+            [일별 주문 내역]
+          </v-subheader>
+        </v-col>
+        <v-col align="right">
+          <v-btn @click="deleteOrder()" style="background: hwb(349 0% 0%)">[주문삭제]</v-btn>
+          <v-btn @click="cancelOrder()" style="background: hsl(64, 70%, 61%)">[주문취소]</v-btn>
+        </v-col>
+      </v-row>
+      <ag-grid-vue 
+        style="width: 100%; height: 300px;" 
+        class="ag-theme-balham" 
+        :columnDefs="colDefs1" 
+        :rowData="rowData1" 
+        :paginationAutoPageSize="true"
+        :pagination="true"
+        :defaultColDef="defaultColDef1"
+        @cellClicked="onCellClicked"
+      />
+    </v-container>
+  </div>
+  <div>
+    <v-container fluid>
+      <v-row>
+        <v-col align="left">
+          <v-subheader>
+            [일별 주문 체결]
+          </v-subheader>
+        </v-col>
+      </v-row>
+      <ag-grid-vue 
+        style="width: 100%; height: 300px;" 
+        class="ag-theme-balham" 
+        :columnDefs="colDefs2" 
+        :rowData="rowData2" 
+        :paginationAutoPageSize="true"
+        :pagination="true"
+        :defaultColDef="defaultColDef2"
+        @cellClicked="onCellClicked"
+      />
+      <v-row>
+        <v-col>
+          <v-btn @click="sendLevel(1)" style="background: lightyellow">[하락지속 기술적반등]</v-btn>
+          <v-btn @click="sendLevel(2)" style="background: lightsteelblue">[단기추세 기술적반등]</v-btn>
+          <v-btn @click="sendLevel(3)" style="background: greenyellow">[패턴 기술적반등]</v-btn>
+          <v-btn @click="sendLevel(4)" style="background: greenyellow">[추세전환 눌림반등]</v-btn>
+          <v-btn @click="sendLevel(5)" style="background: greenyellow">[상승지속 기술적반등]</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>  
 </template>
 <script>
 import axios from "axios";
-import PopUp1 from '../components/StockInfo.vue'
-import PopUp2 from '../components/SubjectSubTotal.vue'
-import PopUp3 from '../components/InterestItem.vue'
-import PopUp4 from '../components/StockSearch.vue'
+import PopUp1 from '../components/OrderInfo.vue'
+import PopUp2 from '../components/StockInfo.vue'
+import PopUp3 from '../components/SubjectSubTotal.vue'
+import PopUp4 from '../components/InterestItem.vue'
+import PopUp5 from '../components/StockSearch.vue'
+import { ref, defineComponent } from 'vue';
+import {AgGridVue} from 'ag-grid-vue3';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주소
 
-  export default {
+export default defineComponent({
+  name: 'App',
+  components:{
+    AgGridVue,
+    PopUp1,
+    PopUp2,
+    PopUp3,
+    PopUp4,
+    PopUp5,
+  },
+  setup(){
 
-    data: () => {
-        return {
-            popupView1: false,
-            popupView2: false,
-            popupView3: false,
-            popupView4: false,
-            stock_asset_num: null,
-            stock_asset_risk_num: null,
-            StockOrderList: [],
-            OrderCompleteList: [],
-            radioSel: 'limit',
-            selected: 'B',
-            options: [
-              { text: '매수', value: 'B' },
-              { text: '매도', value: 'S' }          
-            ],
-            data: {
-                code: "",
-                name: "",
-                buy_price: "",
-                buy_amount: "",
-                sell_price: "",
-                sell_amount: "",
-                loss_price: "",
-                target_price: "",
-            },
-            upd: {
-              buy_price: "",
-              sell_price: "",
-              id: "",
-              trading_type: "",
-              order_no: "",
-              remain_qty: ""
-            },
-            date: new Date(),
-        };
-    },
-    name: 'stockOrder',
-    components: {
-      PopUp1,
-      PopUp2,
-      PopUp3,
-      PopUp4,
-    },
-    methods: {
-      sendForm: function() { 
-        if (this.radioSel == 'market'){
-          this.data.buy_price = '-1'
-          this.data.sell_price = '-1'
-        }else if (this.radioSel == 'bflow'){
-          this.data.buy_amount = '0'
-          this.stock_asset_num = '0'
-        }else if (this.radioSel == 'loss'){
-          this.data.buy_amount = '0'
-        }else if (this.radioSel == 'sflow'){
-          this.data.sell_amount = '0'
-        }else if (this.radioSel == 'half'){
-          this.data.sell_amount = '0'
-          this.stock_asset_num = '0'
-        }
+    const defaultColDef1 = ref({
+      flex: 1,
+      minWidth: 100,
+      //editable: true,
+    });
 
-        if (this.selected == 'B'){
+    const defaultColDef2 = ref({
+      flex: 1,
+      minWidth: 100,
+      //editable: true,
+    });
+
+    const colDefs1 = ref([
+      {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
+      {headerName: '선택', field: 'chk', editable: true, cellRenderer:'agCheckboxCellRenderer', cellEditor: 'agCheckboxCellEditor'},
+      {headerName: '종목코드', field: 'code'},
+      {headerName: '종목명', field: 'name'},
+      {headerName: '매수가', field: 'buy_price', valueSetter: params => {
+        if(params.data.order_stat === '02' || params.data.order_stat === '05'){                       
+          params.data.buy_price = params.newValue;
+
           axios({
-            method: "POST",
-            url: url,
-            data: {
-              acct_no: this.$route.params.acct_no,
-              code: this.data.code,
-              name: this.data.name,
-              buy_price: this.data.buy_price,
-              buy_amount: this.data.buy_amount,
+            method: "GET",
+            url: "http://phills2.gonetis.com:8000/stockOrder/update/",
+            params:{
+              id: params.data.id,
+              order_no: params.data.order_no,
+              buy_price: params.newValue,
               sell_price: 0,
-              sell_amount: 0,
-              loss_price: this.data.loss_price,
-              target_price: this.data.target_price,
-              trading_type: "B",
-              asset_risk_num: this.stock_asset_risk_num,
-              asset_num: this.stock_asset_num,
-              proc_yn: "N",
-              order_no: "0",
-              order_stat: "01",
-              total_complete_qty: 0,
-              remain_qty: 0
-            }, 
-          }).then((response) => {
-            this.StockOrderList = response.data;
-            console.log("Success", response);
-            this.getOrderCompleteList();
-            this.getStockOrderList();            
-          }).catch((error) => {
-            console.log("Failed to StockOrderList", error.response);
-          });
-        }else{
-          axios({
-            method: "POST",
-            url: url,
-            data: {
-              acct_no: this.$route.params.acct_no,
-              code: this.data.code,
-              name: this.data.name,
-              buy_price: 0,
-              buy_amount: 0,
-              sell_price: this.data.sell_price,
-              sell_amount: this.data.sell_amount,
-              loss_price: 0,
-              target_price: 0,
-              trading_type: "S",
-              asset_risk_num: this.stock_asset_risk_num,
-              asset_num: this.stock_asset_num,
-              proc_yn: "N",
-              order_no: "0",
-              order_stat: "01",
-              total_complete_qty: 0,
-              remain_qty: 0
-            }, 
-          }).then((response) => {
-            this.StockOrderList = response.data;
-            console.log("Success", response);
-            this.getOrderCompleteList();
-            this.getStockOrderList();
-          }).catch((error) => {
-            console.log("Failed to StockOrderList", error.response);
-          });
-        }
-      },
-      clearForm: function() {
-        (this.data.code = ""),(this.data.name = ""),(this.data.buy_price = ""),(this.data.buy_amount = ""),(this.data.sell_price = ""),(this.data.sell_amount = ""),(this.data.loss_price = ""),(this.data.target_price = "");
-      },
-      deleteOrder: function(id){
-        axios({
-          method: "DELETE",
-          url: url + id + "/", // http://phills2.gonetis.com:8000/kis/stockOrder/1 로 delete 이벤트 전송
-        }).then((response) => {
-          console.log("Success", response);
-          this.getOrderCompleteList();
-          this.getStockOrderList();
-        }).catch((error) => {
-          console.log("Failed to deleteOrder", error.response);
-        });
-      },
-      onlyStockOrder: function(data, StockOrderList){
-        // 한개의 리스트만 보이도록
-        for (var index in StockOrderList){
-          data.id != StockOrderList[index].id ? (StockOrderList[index].is_hidden = false) : "";
-        }
-        
-      },
-      updateBuyOrder: function(data, id, order_no, remain_qty){
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/update/",
-          params:{
-            id: id,
-            order_no: order_no,
-            buy_price: data.buy_price,
-            sell_price: 0,
-            order_amount: remain_qty,
-            acct_no: this.$route.params.acct_no,
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-          
-        }).then(response => {
-          if(response.data[0].message != "")
-              alert(response.data[0].message)
-          console.log("Success", response)
-          this.getOrderCompleteList();
-          this.getStockOrderList();
-        }).catch(error => {
-          alert("처리 에러")
-          console.log("Failed to updateBuyOrder", error.response);
-        });
-      },
-      updateSellOrder: function(data, id, order_no, remain_qty){
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/update/",
-          params:{
-            id: id,
-            order_no: order_no,
-            buy_price: 0,
-            sell_price: data.sell_price,
-            order_amount: remain_qty,
-            acct_no: this.$route.params.acct_no,
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-          
-        }).then(response => {
-          console.log("Success", response)
-          if(response.data[0].message != "")
-              alert(response.data[0].message)
-          this.getOrderCompleteList();
-          this.getStockOrderList();
-        }).catch(error => {
-          alert("처리 에러")
-          console.log("Failed to updateBuyOrder", error.response);
-        });
-      },
-      cancelOrder: function(id, order_no, order_price, order_amount){
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/cancel/",
-          params:{
-            id: id,
-            order_no: order_no,
-            order_price: order_price,
-            order_amount: order_amount,
-            acct_no: this.$route.params.acct_no,
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-        }).then(response => {
-            this.StockOrderList = response.data;
-            console.log("Success", response);
-            this.getOrderCompleteList();
-            this.getStockOrderList();
-        }).catch(error => {
-            alert("처리 에러")
-            console.log("Failed to cancelOrder", error.response);
-        });
-      },
-      openPopup1() {
-        this.popupView1 = (this.popupView1) ? false : true
-      },
-      openPopup2(){
-        this.popupView2 = (this.popupView2) ? false : true
-      },
-      openPopup3(){
-        this.popupView3 = (this.popupView3) ? false : true
-      },
-      openPopup4(){
-        this.popupView4 = (this.popupView4) ? false : true
-      },
-      sendLevel: function(level){
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockMarketMng/list/",
-          params:{
-            market_level: level,
-            acct_no: this.$route.params.acct_no,
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-          
-        }).then(response => {
-          console.log("Success", response)
-          alert("처리 완료")
-        }).catch(error => {
-          alert("처리 에러")
-          console.log("Failed to send StockMarketLevelMng", error.response);
-        });
-      },
-      sendOrderList() {
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/send/",
-          params:{
-            acct_no: this.$route.params.acct_no,
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-        }).then(response => {
-            this.StockOrderList = response.data;
+              order_amount: params.data.remain_qty,
+              acct_no: params.data.acct_no,
+              app_key: params.data.app_key,
+              app_secret: params.data.app_secret,
+              access_token: params.data.access_token
+            }
+            
+          }).then(response => {
+            console.log("Success", response)
+            alert("매수가변경 완료")
             if(response.data[0].message != "")
               alert(response.data[0].message)
-            console.log("Success", response);
-            this.getOrderCompleteList();
-            this.getStockOrderList();
-        }).catch(error => {
-            alert("처리 에러")
-            console.log("Failed to send OrderList", error.response);
-        });
-      },
-      reload(){
+          }).catch(error => {
+            alert("매수가변경 실패")
+            console.log("Failed to updateBuyOrder", error.response);
+          });
+          return true;
+        }else{
+          return false;
+        }
+      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '매수량', field: 'buy_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+      {headerName: '매도가', field: 'sell_price', valueSetter: params => {
+        if(params.data.order_stat === '02' || params.data.order_stat === '05'){       
+          params.data.sell_price = params.newValue;
+          
+          axios({
+            method: "GET",
+            url: "http://phills2.gonetis.com:8000/stockOrder/update/",
+            params:{
+              id: params.data.id,
+              order_no: params.data.order_no,
+              buy_price: 0,
+              sell_price: params.newValue,
+              order_amount: params.data.remain_qty,
+              acct_no: params.data.acct_no,
+              app_key: params.data.app_key,
+              app_secret: params.data.app_secret,
+              access_token: params.data.access_token
+            }
+                  
+          }).then(response => {
+            console.log("Success", response)
+            alert("매도가변경 완료")
+            if(response.data[0].message != "")
+              alert(response.data[0].message)
+          }).catch(error => {
+            alert("매도가변경 실패")
+            console.log("Failed to updateBuyOrder", error.response);
+          });
+          return true;
+        }else{
+          return false;
+        }
+      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '매도량', field: 'sell_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+      {headerName: '손절가', field: 'loss_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '목표가', field: 'target_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '매매유형', field: 'trading_type', valueFormatter: (params) => {return params.value === 'B' ? '매수' : params.value === 'S' ? '매도' : ''},},
+      {headerName: '주문번호', field: 'order_no'},
+      {headerName: '주문상태', field: 'order_stat', valueFormatter: (params) => {return params.value === '01' ? '주문등록' : params.value === '02' ? '주문전송' : params.value === '03' ? '주문체결' : params.value === '04' ? '주문취소' : params.value === '05' ? '주문정정' : ''},},
+      {headerName: '체결량', field: 'total_complete_qty', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+      {headerName: '잔여량', field: 'remain_qty', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+    ]);
+
+    const colDefs2 = ref([
+      {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
+      {headerName: '주문번호', field: 'order_no'},
+      {headerName: '원주문번호', field: 'org_order_no'},
+      {headerName: '주문구분', field: 'order_type'},
+      {headerName: '주문일자', field: 'order_dt', valueFormatter: (params) => {return params.value.substr(0, 4) + "-" + params.value.substr(4,2) + "-" + params.value.substr(6, 2)},},
+      {headerName: '주문시각', field: 'order_tmd', valueFormatter: (params) => {return params.value.substr(0, 2) + ":" + params.value.substr(2,2) + ":" + params.value.substr(4, 2)},},
+      {headerName: '종목명', field: 'name', tooltip: true, tolltipField: 'name'},
+      {headerName: '주문가', field: 'order_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '주문수량', field: 'order_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+      {headerName: '총체결수량', field: 'total_complete_qty', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+      {headerName: '잔여수량', field: 'remain_qty', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+      {headerName: '총체결금액', field: 'total_complete_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+    ]);
+    return {
+      defaultColDef1,
+      colDefs1,
+      defaultColDef2,
+      colDefs2
+    }
+  },
+  data: () => {
+      return {
+          popupView1: false,
+          popupView2: false,
+          popupView3: false,
+          popupView4: false,
+          popupView5: false,
+          rowData1: [],
+          rowData2: [],
+          radioSel: 'limit',
+          selected: 'B',
+          options: [
+            { text: '매수', value: 'B' },
+            { text: '매도', value: 'S' }          
+          ],
+          data: {
+              code: "",
+              name: "",
+              buy_price: "",
+              buy_amount: "",
+              sell_price: "",
+              sell_amount: "",
+              loss_price: "",
+              target_price: "",
+          },
+      };
+  },
+  methods: {
+    deleteOrder: function(){
+      this.rowData1.forEach(data =>{
+        if(data.chk){
+          if(data.order_stat === '01'){
+            axios({
+              method: "DELETE",
+              url: url + data.id + "/", // http://phills2.gonetis.com:8000/kis/stockOrder/1 로 delete 이벤트 전송
+            }).then((response) => {
+              console.log("Success", response);
+              alert("주문삭제 완료")
+              this.getOrderCompleteList();
+              this.getStockOrderList();
+            }).catch((error) => {
+              console.log("Failed to deleteOrder", error.response);
+              alert("주문삭제 실패")
+            });
+          }else{
+            alert("주문삭제 대상 주문상태가 아닙니다.")
+          }
+        } 
+      })
+    },
+    cancelOrder: function(){
+      this.rowData1.forEach(data =>{
+        if(data.chk){
+          if(data.order_stat === '02' || data.order_stat === '03' || data.order_stat === '05'){
+            let order_price = 0
+            if(data.trading_type === 'B'){
+              order_price = data.buy_price
+            }else{
+              order_price = data.sell_price
+            }  
+            axios({
+              method: "GET",
+              url: "http://phills2.gonetis.com:8000/stockOrder/cancel/",
+              params:{
+                id: data.id,
+                order_no: data.order_no,
+                order_price: order_price,
+                order_amount: data.remain_qty,
+                acct_no: data.acct_no,
+                app_key: data.app_key,
+                app_secret: data.app_secret,
+                access_token: data.access_token
+              }
+            }).then((response) => {
+              console.log("Success", response);
+              alert("주문취소 완료")
+              this.getOrderCompleteList();
+              this.getStockOrderList();
+            }).catch((error) => {
+              console.log("Failed to cancelOrder", error.response);
+              alert("주문취소 실패")
+            });
+          }else{
+            alert("주문취소 대상 주문상태가 아닙니다.")
+          }
+        } 
+      })
+    },
+    openPopup1() {
+      this.popupView1 = (this.popupView1) ? false : true
+    },
+    openPopup2(){
+      this.popupView2 = (this.popupView2) ? false : true
+    },
+    openPopup3(){
+      this.popupView3 = (this.popupView3) ? false : true
+    },
+    openPopup4(){
+      this.popupView4 = (this.popupView4) ? false : true
+    },
+    openPopup5(){
+      this.popupView5 = (this.popupView5) ? false : true
+    },
+    sendLevel: function(level){
+      axios({
+        method: "GET",
+        url: "http://phills2.gonetis.com:8000/stockMarketMng/list/",
+        params:{
+          market_level: level,
+          acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token
+        }
+        
+      }).then(response => {
+        console.log("Success", response)
+        alert("처리 완료")
+      }).catch(error => {
+        alert("처리 에러")
+        console.log("Failed to send StockMarketLevelMng", error.response);
+      });
+    },
+    sendOrderList() {
+      axios({
+        method: "GET",
+        url: "http://phills2.gonetis.com:8000/stockOrder/send/",
+        params:{
+          acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token
+        }
+      }).then(response => {
+        alert("주문전송 완료")
+        this.rowData1 = response.data;
+        if(response.data[0].message != "")
+          alert(response.data[0].message)
+        console.log("Success", response);
         this.getOrderCompleteList();
         this.getStockOrderList();
-      },  
-      getStockOrderList() {
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/orderList/",
-          params:{
-            acct_no: this.$route.params.acct_no,
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-        }).then(response => {
-            this.StockOrderList = response.data;
-            this.stock_asset_num = response.data[0].stock_asset_num
-            this.stock_asset_risk_num = response.data[0].stock_asset_risk_num
-            console.log("Success", response);
-            console.log("stock_asset_num : ", this.stock_asset_num);
-            console.log("stock_asset_risk_num : ", this.stock_asset_risk_num);
-        }).catch(error => {
-            console.log("Failed to get StockOrderList", error.response);
-        });
-      },
-      getOrderCompleteList() {
-        axios({
-          method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrderComplete/",
-          params:{
-            acct_no: this.$route.params.acct_no,
-            app_key: this.$route.params.app_key,
-            app_secret: this.$route.params.app_secret,
-            access_token: this.$route.params.access_token
-          }
-        }).then(response => {
-            this.OrderCompleteList = response.data;
-            console.log("Success", response);
-        }).catch(error => {
-            alert("처리 에러")
-            console.log("Failed to get OrderCompleteList", error.response);
-        });
-      },
-      formatDate(str){
-        return str.split('T')[0];
-      },    
+      }).catch(error => {
+          alert("주문전송 실패")
+          console.log("Failed to send OrderList", error.response);
+      });
     },
-    created(){
+    reload(){
       this.getOrderCompleteList();
       this.getStockOrderList();
-    }
-  };
-  
+    },  
+    getStockOrderList() {
+      axios({
+        method: "GET",
+        url: "http://phills2.gonetis.com:8000/stockOrder/orderList/",
+        params:{
+          acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token
+        }
+      }).then(response => {
+        console.log("Success1", response);
+        this.rowData1 = response.data;
+        this.rowData1.forEach(data => {data.acct_no = this.$route.params.acct_no})
+        this.rowData1.forEach(data => {data.app_key = this.$route.params.app_key})
+        this.rowData1.forEach(data => {data.app_secret = this.$route.params.app_secret})
+        this.rowData1.forEach(data => {data.access_token = this.$route.params.access_token})
+      }).catch(error => {
+        console.log("Failed to get StockOrderList", error.response);
+      });
+    },
+    getOrderCompleteList() {
+      axios({
+        method: "GET",
+        url: "http://phills2.gonetis.com:8000/stockOrderComplete/",
+        params:{
+          acct_no: this.$route.params.acct_no,
+          app_key: this.$route.params.app_key,
+          app_secret: this.$route.params.app_secret,
+          access_token: this.$route.params.access_token
+        }
+      }).then(response => {
+        console.log("Success2", response);
+        this.rowData2 = response.data;
+      }).catch(error => {
+        alert("처리 에러")
+        console.log("Failed to get OrderCompleteList", error.response);
+      });
+    },
+  },
+  created(){
+    this.getOrderCompleteList();
+    this.getStockOrderList();
+  }
+});
+
 </script>
 <style>
 .popup-view{
-  opacity: 0;
-  display: none;
-  visibility: hidden;
+opacity: 0;
+display: none;
+visibility: hidden;
 }
 .active{
-  opacity: 1;
-  display: block;
-  visibility: visible;
+opacity: 1;
+display: block;
+visibility: visible;
 }
 </style>
