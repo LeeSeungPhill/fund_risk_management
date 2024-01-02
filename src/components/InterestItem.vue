@@ -53,7 +53,11 @@
             {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},},
             {headerName: '현재가', field: 'stck_prpr', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
             {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
-            {headerName: '돌파가격', field: 'through_price', valueSetter: params => {
+            {headerName: '돌파가격', field: 'through_price', cellStyle: params=> {
+                if(params.data.K_through_price === '1' ) {
+                    return {color:'red', 'font-weight': 'bold'}
+                }
+            }, valueSetter: params => {
                 
                 params.data.through_price = params.newValue;
 
@@ -79,7 +83,11 @@
                 });
                 return true;
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-            {headerName: '이탈가격', field: 'leave_price', valueSetter: params => {
+            {headerName: '이탈가격', field: 'leave_price', cellStyle: params=> {
+                if(params.data.D_leave_price === '1' ) {
+                    return {color:'blue', 'font-weight': 'bold'}
+                }
+            }, valueSetter: params => {
                 
                 params.data.leave_price = params.newValue;
 
@@ -105,7 +113,11 @@
                 });
                 return true;
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-            {headerName: '저항가격', field: 'resist_price', valueSetter: params => {
+            {headerName: '저항가격', field: 'resist_price', cellStyle: params=> {
+                if(params.data.K_resist_price === '1' ) {
+                    return {color:'red', 'font-weight': 'bold'}
+                }
+            }, valueSetter: params => {
                 
                 params.data.resist_price = params.newValue;
 
@@ -131,7 +143,11 @@
                 });
                 return true;
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-            {headerName: '지지가격', field: 'support_price', valueSetter: params => {
+            {headerName: '지지가격', field: 'support_price', cellStyle: params=> {
+                if(params.data.D_support_price === '1' ) {
+                    return {color:'blue', 'font-weight': 'bold'}
+                }
+            }, valueSetter: params => {
                 
                 params.data.support_price = params.newValue;
 
@@ -157,7 +173,11 @@
                 });
                 return true;
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-            {headerName: '추세상단가격', field: 'trend_high_price', valueSetter: params => {
+            {headerName: '추세상단가격', field: 'trend_high_price', cellStyle: params=> {
+                if(params.data.K_trend_high_price === '1' ) {
+                    return {color:'red', 'font-weight': 'bold'}
+                }
+            }, valueSetter: params => {
                 
                 params.data.trend_high_price = params.newValue;
 
@@ -183,7 +203,11 @@
                 });
                 return true;
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-            {headerName: '추세하단가격', field: 'trend_low_price', valueSetter: params => {
+            {headerName: '추세하단가격', field: 'trend_low_price', cellStyle: params=> {
+                if(params.data.D_trend_low_price === '1' ) {
+                    return {color:'blue', 'font-weight': 'bold'}
+                }
+            }, valueSetter: params => {
                 
                 params.data.trend_low_price = params.newValue;
 

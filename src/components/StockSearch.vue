@@ -226,7 +226,8 @@
         fetchData: function(){
           const date1 = new Date(this.picked);
           let year = date1.getFullYear();
-          let month = date1.getMonth() < 10 ? '0' + date1.getMonth()+1 : date1.getMonth()+1
+          let mon = date1.getMonth()+1
+          let month = date1.getMonth() < 10 ? '0' + mon : mon
           let day = date1.getDate() < 10 ? '0' + date1.getDate() : date1.getDate()
   
           axios({

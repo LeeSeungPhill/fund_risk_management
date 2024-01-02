@@ -57,7 +57,11 @@ export default defineComponent({
       {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '평가금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '증감액', field: 'valuation_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '저항가격', field: 'sign_resist_price', valueSetter: params => {
+      {headerName: '저항가격', field: 'sign_resist_price', cellStyle: params=> {
+        if(params.data.K_sign_resist_price === '1' ) {
+          return {color:'red', 'font-weight': 'bold'}
+        }
+      }, valueSetter: params => {
                 
         params.data.sign_resist_price = params.newValue;
 
@@ -81,7 +85,11 @@ export default defineComponent({
                 });
                 return true;
       }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '지지가격', field: 'sign_support_price', valueSetter: params => {
+      {headerName: '지지가격', field: 'sign_support_price', cellStyle: params=> {
+        if(params.data.D_sign_support_price === '1' ) {
+          return {color:'blue', 'font-weight': 'bold'}
+        }
+      }, valueSetter: params => {
                 
         params.data.sign_support_price = params.newValue;
 
@@ -105,7 +113,11 @@ export default defineComponent({
                 });
                 return true;
       }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '목표가격', field: 'end_target_price', valueSetter: params => {
+      {headerName: '목표가격', field: 'end_target_price', cellStyle: params=> {
+        if(params.data.K_target_price === '1' ) {
+          return {color:'red', 'font-weight': 'bold'}
+        }
+      }, valueSetter: params => {
                 
         params.data.end_target_price = params.newValue;
 
@@ -129,7 +141,11 @@ export default defineComponent({
                 });
                 return true;
       }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '이탈가격', field: 'end_loss_price', valueSetter: params => {
+      {headerName: '이탈가격', field: 'end_loss_price', cellStyle: params=> {
+        if(params.data.D_loss_price === '1' ) {
+          return {color:'blue', 'font-weight': 'bold'}
+        }
+      }, valueSetter: params => {
                 
         params.data.end_loss_price = params.newValue;
 
