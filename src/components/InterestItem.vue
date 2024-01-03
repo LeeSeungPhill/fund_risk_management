@@ -85,7 +85,7 @@
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
             {headerName: '이탈가격', field: 'leave_price', cellStyle: params=> {
                 if(params.data.D_leave_price === '1' ) {
-                    return {color:'sky', 'font-weight': 'bold'}
+                    return {color:'skyblue', 'font-weight': 'bold'}
                 }
             }, valueSetter: params => {
                 
@@ -145,7 +145,7 @@
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
             {headerName: '지지가격', field: 'support_price', cellStyle: params=> {
                 if(params.data.D_support_price === '1' ) {
-                    return {color:'purple', 'font-weight': 'bold'}
+                    return {color:'indigo', 'font-weight': 'bold'}
                 }
             }, valueSetter: params => {
                 

@@ -87,7 +87,7 @@ export default defineComponent({
       }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '지지가격', field: 'sign_support_price', cellStyle: params=> {
         if(params.data.D_sign_support_price === '1' ) {
-          return {color:'sky', 'font-weight': 'bold'}
+          return {color:'skyblue', 'font-weight': 'bold'}
         }
       }, valueSetter: params => {
                 
