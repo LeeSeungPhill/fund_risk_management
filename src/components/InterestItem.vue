@@ -55,7 +55,7 @@
             {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
             {headerName: '돌파가격', field: 'through_price', cellStyle: params=> {
                 if(params.data.K_through_price === '1' ) {
-                    return {color:'red', 'font-weight': 'bold'}
+                    return {color:'orange', 'font-weight': 'bold'}
                 }
             }, valueSetter: params => {
                 
@@ -85,7 +85,7 @@
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
             {headerName: '이탈가격', field: 'leave_price', cellStyle: params=> {
                 if(params.data.D_leave_price === '1' ) {
-                    return {color:'blue', 'font-weight': 'bold'}
+                    return {color:'sky', 'font-weight': 'bold'}
                 }
             }, valueSetter: params => {
                 
@@ -115,7 +115,7 @@
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
             {headerName: '저항가격', field: 'resist_price', cellStyle: params=> {
                 if(params.data.K_resist_price === '1' ) {
-                    return {color:'red', 'font-weight': 'bold'}
+                    return {color:'brown', 'font-weight': 'bold'}
                 }
             }, valueSetter: params => {
                 
@@ -145,7 +145,7 @@
             }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
             {headerName: '지지가격', field: 'support_price', cellStyle: params=> {
                 if(params.data.D_support_price === '1' ) {
-                    return {color:'blue', 'font-weight': 'bold'}
+                    return {color:'purple', 'font-weight': 'bold'}
                 }
             }, valueSetter: params => {
                 

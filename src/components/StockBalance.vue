@@ -59,7 +59,7 @@ export default defineComponent({
       {headerName: '증감액', field: 'valuation_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '저항가격', field: 'sign_resist_price', cellStyle: params=> {
         if(params.data.K_sign_resist_price === '1' ) {
-          return {color:'red', 'font-weight': 'bold'}
+          return {color:'orange', 'font-weight': 'bold'}
         }
       }, valueSetter: params => {
                 
@@ -87,7 +87,7 @@ export default defineComponent({
       }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '지지가격', field: 'sign_support_price', cellStyle: params=> {
         if(params.data.D_sign_support_price === '1' ) {
-          return {color:'blue', 'font-weight': 'bold'}
+          return {color:'sky', 'font-weight': 'bold'}
         }
       }, valueSetter: params => {
                 
