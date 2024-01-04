@@ -50,9 +50,7 @@
             {headerName: '선택', field: 'chk', editable: true, cellRenderer:'agCheckboxCellRenderer', cellEditor: 'agCheckboxCellEditor'},
             {headerName: '종목코드', field: 'code'},
             {headerName: '종목명', field: 'name'},
-            {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},},
             {headerName: '현재가', field: 'stck_prpr', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-            {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
             {headerName: '돌파가격', field: 'through_price', cellStyle: params=> {
                 if(params.data.K_through_price === '1' ) {
                     return {color:'orange', 'font-weight': 'bold'}
@@ -82,7 +80,13 @@
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') {
+                    return params.value.toLocaleString();
+                }else{
+                    return '￦' + params.value.toLocaleString();
+                }
+            },},
             {headerName: '이탈가격', field: 'leave_price', cellStyle: params=> {
                 if(params.data.D_leave_price === '1' ) {
                     return {color:'skyblue', 'font-weight': 'bold'}
@@ -112,7 +116,13 @@
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') {
+                    return params.value.toLocaleString();
+                }else{
+                    return '￦' + params.value.toLocaleString();
+                }
+            },},
             {headerName: '저항가격', field: 'resist_price', cellStyle: params=> {
                 if(params.data.K_resist_price === '1' ) {
                     return {color:'brown', 'font-weight': 'bold'}
@@ -142,7 +152,13 @@
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') {
+                    return params.value.toLocaleString();
+                }else{
+                    return '￦' + params.value.toLocaleString();
+                }
+            },},
             {headerName: '지지가격', field: 'support_price', cellStyle: params=> {
                 if(params.data.D_support_price === '1' ) {
                     return {color:'indigo', 'font-weight': 'bold'}
@@ -172,7 +188,13 @@
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') {
+                    return params.value.toLocaleString();
+                }else{
+                    return '￦' + params.value.toLocaleString();
+                }
+            },},
             {headerName: '추세상단가격', field: 'trend_high_price', cellStyle: params=> {
                 if(params.data.K_trend_high_price === '1' ) {
                     return {color:'red', 'font-weight': 'bold'}
@@ -202,7 +224,13 @@
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') {
+                    return params.value.toLocaleString();
+                }else{
+                    return '￦' + params.value.toLocaleString();
+                }
+            },},
             {headerName: '추세하단가격', field: 'trend_low_price', cellStyle: params=> {
                 if(params.data.D_trend_low_price === '1' ) {
                     return {color:'blue', 'font-weight': 'bold'}
@@ -232,7 +260,14 @@
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') {
+                    return params.value.toLocaleString();
+                }else{
+                    return '￦' + params.value.toLocaleString();
+                }
+            },},
+            {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
             {headerName: '매수예상금액', field: 'buy_expect_sum', valueSetter: params => {
                 
                 params.data.buy_expect_sum = params.newValue;
@@ -258,7 +293,14 @@
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') {
+                    return params.value.toLocaleString();
+                }else{
+                    return '￦' + params.value.toLocaleString();
+                }
+            },},
+            {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},},
         ]);
 
         return {

@@ -51,12 +51,8 @@ export default defineComponent({
       {headerName: '종목명', field: 'name'},
       {headerName: '매입가', field: 'purchase_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
       {headerName: '수익률', field: 'earnings_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
-      {headerName: '보유수량', field: 'purchase_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
-      {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '평가금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '증감액', field: 'valuation_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
       {headerName: '저항가격', field: 'sign_resist_price', cellStyle: params=> {
         if(params.data.K_sign_resist_price === '1' ) {
           return {color:'orange', 'font-weight': 'bold'}
@@ -169,6 +165,10 @@ export default defineComponent({
                 });
                 return true;
       }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '보유수량', field: 'purchase_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
+      {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '평가금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '증감액', field: 'valuation_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '매매계획', field: 'trading_plan', valueFormatter: (params) => {return params.value === 'B' ? '매수' : params.value === 'S' ? '매도' : params.value === 'H' ? '보유' : ''}, valueSetter: params => {
                 
         params.data.trading_plan = params.newValue;
