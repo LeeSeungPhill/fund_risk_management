@@ -293,14 +293,26 @@
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+            }, editable: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') { 
+                    return false;
+                }else{
+                    return true;
+                }
+            }, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
                 if(params.data.code === '0001' || params.data.code === '1001') {
-                    return params.value.toLocaleString();
+                    return '';
                 }else{
                     return '￦' + params.value.toLocaleString();
                 }
             },},
-            {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},},
+            {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {
+                if(params.data.code === '0001' || params.data.code === '1001') {
+                    return '';
+                }else{
+                    return params.value.toLocaleString() + '억원';
+                }
+            },},
         ]);
 
         return {
