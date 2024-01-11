@@ -351,14 +351,14 @@
                         }).then(response => {
                             console.log("Success", response)
                             charturl = "http://phills2.gonetis.com:8000/stockBalance/"+response.data[0].market+"/"
-                            window.open(charturl, "", "_blank"); 
+                            window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                             charturl = null
                         }).catch(error => {
                             alert("처리 에러")
                             console.log("Failed to kospiInfo", error.response);
                         }); 
                         if(charturl != null) 
-                            window.open(charturl, "", "_blank");
+                            window.open(charturl, "PopupWin", "width=1000,height=1000", true);
                     }else{
                         axios({
                             method: "GET",
@@ -371,14 +371,14 @@
                         }).then(response => {
                             console.log("Success", response)
                             charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
-                            window.open(charturl, "", "_blank"); 
+                            window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                             charturl = null
                         }).catch(error => {
                             alert("처리 에러")
                             console.log("Failed to doInfo", error.response);
                         }); 
                         if(charturl != null) 
-                            window.open(charturl, "", "_blank"); 
+                            window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                     }    
                 }
                 if(e.column.colId === 'name'){  
@@ -396,14 +396,14 @@
                         }).then(response => {
                             console.log("Success", response)
                             charturl = "http://phills2.gonetis.com:8000/stockBalance/minutes_"+response.data[0].market+"/"
-                            window.open(charturl, "", "_blank"); 
+                            window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                             charturl = null
                         }).catch(error => {
                             alert("처리 에러")
                             console.log("Failed to kospiMinutesInfo", error.response);
                         }); 
                         if(charturl != null) 
-                            window.open(charturl, "", "_blank");
+                            window.open(charturl, "PopupWin", "width=1000,height=1000", true);
 
                     }else{
                         axios({
@@ -420,14 +420,14 @@
                         }).then(response => {
                             console.log("Success", response)
                             charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
-                            window.open(charturl, "", "_blank"); 
+                            window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                             charturl = null
                         }).catch(error => {
                             alert("처리 에러")
                             console.log("Failed to minutesInfo", error.response);
                         }); 
                         if(charturl != null) 
-                            window.open(charturl, "", "_blank"); 
+                            window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                     }
                 }
             },

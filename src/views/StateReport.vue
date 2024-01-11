@@ -64,14 +64,14 @@ export default {
       }).then(response => {
         console.log("Success", response)
         this.charturl = "http://phills2.gonetis.com:8000/stockBalance/"+response.data[0].market+"/"
-        window.open(this.charturl, "", "_blank"); 
+        window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
         this.charturl = null
       }).catch(error => {
         alert("처리 에러")
         console.log("Failed to kospiInfo", error.response);
       }); 
       if(this.charturl != null) 
-        window.open(this.charturl, "", "_blank"); 
+        window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
     },
     minutesInfo: function(market){
         axios({
@@ -87,14 +87,14 @@ export default {
         }).then(response => {
           console.log("Success", response)
           this.charturl = "http://phills2.gonetis.com:8000/stockBalance/minutes_"+response.data[0].market+"/"
-          window.open(this.charturl, "", "_blank"); 
+          window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
           this.charturl = null
         }).catch(error => {
           alert("처리 에러")
           console.log("Failed to kospiMinutesInfo", error.response);
         }); 
         if(this.charturl != null) 
-          window.open(this.charturl, "", "_blank"); 
+          window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
       },
   }
 

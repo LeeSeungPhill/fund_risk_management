@@ -102,7 +102,7 @@
           this.code = response.data[0].code
           this.name = data.company
           this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+data.company+"/"
-          window.open(this.charturl, "", "_blank"); 
+          window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
         }).catch(error => {
           alert("처리 에러")
           console.log("Failed to searchStock", error.response);
@@ -124,7 +124,7 @@
           }).then(response => {
             console.log("Success", response)
             this.charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
-            window.open(this.charturl, "", "_blank"); 
+            window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
             this.charturl = null
           }).catch(error => {
             alert("처리 에러")
