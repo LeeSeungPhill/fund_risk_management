@@ -101,7 +101,7 @@
           this.prdy_vol_rate = response.data[0].prdy_vol_rate
           this.code = response.data[0].code
           this.name = data.company
-          this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+data.company+"/"
+          this.charturl = "http://phills2.gonetis.com:8000/stockOrder/"+data.company+response.data[0].YmdHM+"/"
           window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
         }).catch(error => {
           alert("처리 에러")
