@@ -38,6 +38,8 @@
                   :paginationAutoPageSize="true"
                   :pagination="true"
                   :defaultColDef="defaultColDef1"
+                  :tooltipShowDelay="tooltipShowDelay"
+                  :tooltipHideDelay="tooltipHideDelay"
                   @cellClicked="onCellClicked"
             />
           </v-col>
@@ -50,6 +52,8 @@
                   :paginationAutoPageSize="true"
                   :pagination="true"
                   :defaultColDef="defaultColDef2"
+                  :tooltipShowDelay="tooltipShowDelay"
+                  :tooltipHideDelay="tooltipHideDelay"
                   @cellClicked="onCellClicked"
             />
           </v-col>  
@@ -59,7 +63,7 @@
   </div>
 </template>
 <script>
-  import { ref, defineComponent } from 'vue';
+  import { ref, onBeforeMount, defineComponent } from 'vue';
   import axios from "axios";
   import {AgGridVue} from 'ag-grid-vue3';
   import 'ag-grid-community/styles/ag-grid.css';
@@ -73,6 +77,9 @@
   },
   setup(){
 
+    const tooltipShowDelay = ref(null);
+    const tooltipHideDelay = ref(null);
+
     const defaultColDef1 = ref({
       flex: 1,
       minWidth: 100,
@@ -85,10 +92,15 @@
       //editable: true,
     });
 
+    onBeforeMount(() => {
+      tooltipShowDelay.value = 0;
+      tooltipHideDelay.value = 2000;
+    });
+
     const colDefs1 = ref([
       {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
       {headerName: '종목코드', field: 'code'},
-      {headerName: '종목명', field: 'name'},
+      {headerName: '종목명', field: 'name', tooltipField: 'name'},
       {headerName: '수급주체', field: 'tr_subject'},
       {headerName: '순거래합산', field: 'volumn', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
     ]);
@@ -96,7 +108,7 @@
     const colDefs2 = ref([
       {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
       {headerName: '종목코드', field: 'code'},
-      {headerName: '종목명', field: 'name'},
+      {headerName: '종목명', field: 'name', tooltipField: 'name'},
       {headerName: '수급주체', field: 'tr_subject'},
       {headerName: '순거래합산', field: 'volumn', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
     ]);
@@ -105,7 +117,9 @@
       defaultColDef1,
       colDefs1,
       defaultColDef2,
-      colDefs2
+      colDefs2,
+      tooltipShowDelay,
+      tooltipHideDelay,
     }
   },  
   data() {

@@ -19,13 +19,15 @@
                 :paginationAutoPageSize="true"
                 :pagination="true"
                 :defaultColDef="defaultColDef"
+                :tooltipShowDelay="tooltipShowDelay"
+                :tooltipHideDelay="tooltipHideDelay"
                 @cellClicked="onCellClicked"
             />
         </v-container>
     </div>
 </template>
 <script>
-    import { ref, defineComponent } from 'vue';
+    import { ref, onBeforeMount, defineComponent } from 'vue';
     import axios from "axios";
     import {AgGridVue} from 'ag-grid-vue3';
     import 'ag-grid-community/styles/ag-grid.css';
@@ -38,287 +40,303 @@
             AgGridVue
         },
         setup(){
+            
+            const tooltipShowDelay = ref(null);
+            const tooltipHideDelay = ref(null);
 
-        const defaultColDef = ref({
-            flex: 1,
-            minWidth: 100,
-            //editable: true,
-        });
+            const defaultColDef = ref({
+                flex: 1,
+                minWidth: 100,
+                //editable: true,
+            });
 
-        const colDefs = ref([
-            {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
-            {headerName: '선택', field: 'chk', editable: true, cellRenderer:'agCheckboxCellRenderer', cellEditor: 'agCheckboxCellEditor'},
-            {headerName: '종목코드', field: 'code'},
-            {headerName: '종목명', field: 'name'},
-            {headerName: '현재가', field: 'stck_prpr', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-            {headerName: '돌파가격', field: 'through_price', cellStyle: params=> {
-                if(params.data.K_through_price === '1' ) {
-                    return {color:'orange', 'font-weight': 'bold'}
-                }
-            }, valueSetter: params => {
-                
-                params.data.through_price = params.newValue;
+            onBeforeMount(() => {
+                tooltipShowDelay.value = 0;
+                tooltipHideDelay.value = 2000;
+            });
 
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    id: params.data.id,
-                    through_price: params.newValue,
-                    leave_price: params.data.leave_price,
-                    resist_price: params.data.resist_price,
-                    support_price: params.data.support_price,
-                    trend_high_price: params.data.trend_high_price,
-                    trend_low_price: params.data.trend_low_price,
-                    buy_expect_sum: params.data.buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') {
-                    return params.value.toLocaleString();
-                }else{
-                    return '￦' + params.value.toLocaleString();
-                }
-            },},
-            {headerName: '이탈가격', field: 'leave_price', cellStyle: params=> {
-                if(params.data.D_leave_price === '1' ) {
-                    return {color:'skyblue', 'font-weight': 'bold'}
-                }
-            }, valueSetter: params => {
-                
-                params.data.leave_price = params.newValue;
+            const colDefs = ref([
+                {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
+                {headerName: '선택', field: 'chk', editable: true, cellRenderer:'agCheckboxCellRenderer', cellEditor: 'agCheckboxCellEditor'},
+                {headerName: '종목코드', field: 'code'},
+                {headerName: '종목명', field: 'name', tooltipField: 'name'},
+                {headerName: '현재가', field: 'stck_prpr', valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return params.value.toLocaleString();
+                    }else{
+                        return '￦' + params.value.toLocaleString();
+                    }
+                },},
+                {headerName: '돌파가격', field: 'through_price', cellStyle: params=> {
+                    if(params.data.K_through_price === '1' ) {
+                        return {color:'orange', 'font-weight': 'bold'}
+                    }
+                }, valueSetter: params => {
+                    
+                    params.data.through_price = params.newValue;
 
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    id: params.data.id,
-                    through_price: params.data.through_price,
-                    leave_price: params.newValue,
-                    resist_price: params.data.resist_price,
-                    support_price: params.data.support_price,
-                    trend_high_price: params.data.trend_high_price,
-                    trend_low_price: params.data.trend_low_price,
-                    buy_expect_sum: params.data.buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') {
-                    return params.value.toLocaleString();
-                }else{
-                    return '￦' + params.value.toLocaleString();
-                }
-            },},
-            {headerName: '저항가격', field: 'resist_price', cellStyle: params=> {
-                if(params.data.K_resist_price === '1' ) {
-                    return {color:'brown', 'font-weight': 'bold'}
-                }
-            }, valueSetter: params => {
-                
-                params.data.resist_price = params.newValue;
-
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    id: params.data.id,
-                    through_price: params.data.through_price,
-                    leave_price: params.data.leave_price,
-                    resist_price: params.newValue,
-                    support_price: params.data.support_price,
-                    trend_high_price: params.data.trend_high_price,
-                    trend_low_price: params.data.trend_low_price,
-                    buy_expect_sum: params.data.buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') {
-                    return params.value.toLocaleString();
-                }else{
-                    return '￦' + params.value.toLocaleString();
-                }
-            },},
-            {headerName: '지지가격', field: 'support_price', cellStyle: params=> {
-                if(params.data.D_support_price === '1' ) {
-                    return {color:'indigo', 'font-weight': 'bold'}
-                }
-            }, valueSetter: params => {
-                
-                params.data.support_price = params.newValue;
-
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    id: params.data.id,
-                    through_price: params.data.through_price,
-                    leave_price: params.data.leave_price,
-                    resist_price: params.data.resist_price,
-                    support_price: params.newValue,
-                    trend_high_price: params.data.trend_high_price,
-                    trend_low_price: params.data.trend_low_price,
-                    buy_expect_sum: params.data.buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') {
-                    return params.value.toLocaleString();
-                }else{
-                    return '￦' + params.value.toLocaleString();
-                }
-            },},
-            {headerName: '추세상단가격', field: 'trend_high_price', cellStyle: params=> {
-                if(params.data.K_trend_high_price === '1' ) {
-                    return {color:'red', 'font-weight': 'bold'}
-                }
-            }, valueSetter: params => {
-                
-                params.data.trend_high_price = params.newValue;
-
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    id: params.data.id,
-                    through_price: params.data.through_price,
-                    leave_price: params.data.leave_price,
-                    resist_price: params.data.resist_price,
-                    support_price: params.data.support_price,
-                    trend_high_price: params.newValue,
-                    trend_low_price: params.data.trend_low_price,
-                    buy_expect_sum: params.data.buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') {
-                    return params.value.toLocaleString();
-                }else{
-                    return '￦' + params.value.toLocaleString();
-                }
-            },},
-            {headerName: '추세하단가격', field: 'trend_low_price', cellStyle: params=> {
-                if(params.data.D_trend_low_price === '1' ) {
-                    return {color:'blue', 'font-weight': 'bold'}
-                }
-            }, valueSetter: params => {
-                
-                params.data.trend_low_price = params.newValue;
-
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    id: params.data.id,
-                    through_price: params.data.through_price,
-                    leave_price: params.data.leave_price,
-                    resist_price: params.data.resist_price,
-                    support_price: params.data.support_price,
-                    trend_high_price: params.data.trend_high_price,
-                    trend_low_price: params.newValue,
-                    buy_expect_sum: params.data.buy_expect_sum
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-            }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') {
-                    return params.value.toLocaleString();
-                }else{
-                    return '￦' + params.value.toLocaleString();
-                }
-            },},
-            {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
-            {headerName: '매수예상금액', field: 'buy_expect_sum', valueSetter: params => {
-                
-                params.data.buy_expect_sum = params.newValue;
-
-                axios({
-                method: "GET",
-                url: "http://phills2.gonetis.com:8000/interestItem/update/",
-                params:{
-                    id: params.data.id,
-                    through_price: params.data.through_price,
-                    leave_price: params.data.leave_price,
-                    resist_price: params.data.resist_price,
-                    support_price: params.data.support_price,
-                    trend_high_price: params.data.trend_high_price,
-                    trend_low_price: params.data.trend_low_price,
-                    buy_expect_sum: params.newValue
-                }
-                
-                }).then(response => {
-                    console.log("Success", response)
-                }).catch(error => {
-                    alert("처리 에러")
-                    console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-            }, editable: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') { 
-                    return false;
-                }else{
+                    axios({
+                    method: "GET",
+                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    params:{
+                        id: params.data.id,
+                        through_price: params.newValue,
+                        leave_price: params.data.leave_price,
+                        resist_price: params.data.resist_price,
+                        support_price: params.data.support_price,
+                        trend_high_price: params.data.trend_high_price,
+                        trend_low_price: params.data.trend_low_price,
+                        buy_expect_sum: params.data.buy_expect_sum
+                    }
+                    
+                    }).then(response => {
+                        console.log("Success", response)
+                    }).catch(error => {
+                        alert("처리 에러")
+                        console.log("Failed to updateItem1", error.response);
+                    });
                     return true;
-                }
-            }, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') {
-                    return '';
-                }else{
-                    return '￦' + params.value.toLocaleString();
-                }
-            },},
-            {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {
-                if(params.data.code === '0001' || params.data.code === '1001') {
-                    return '';
-                }else{
-                    return params.value.toLocaleString() + '억원';
-                }
-            },},
-        ]);
+                }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return params.value.toLocaleString();
+                    }else{
+                        return '￦' + params.value.toLocaleString();
+                    }
+                },},
+                {headerName: '이탈가격', field: 'leave_price', cellStyle: params=> {
+                    if(params.data.D_leave_price === '1' ) {
+                        return {color:'skyblue', 'font-weight': 'bold'}
+                    }
+                }, valueSetter: params => {
+                    
+                    params.data.leave_price = params.newValue;
 
-        return {
-            defaultColDef,
-            colDefs
-        }
+                    axios({
+                    method: "GET",
+                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    params:{
+                        id: params.data.id,
+                        through_price: params.data.through_price,
+                        leave_price: params.newValue,
+                        resist_price: params.data.resist_price,
+                        support_price: params.data.support_price,
+                        trend_high_price: params.data.trend_high_price,
+                        trend_low_price: params.data.trend_low_price,
+                        buy_expect_sum: params.data.buy_expect_sum
+                    }
+                    
+                    }).then(response => {
+                        console.log("Success", response)
+                    }).catch(error => {
+                        alert("처리 에러")
+                        console.log("Failed to updateItem1", error.response);
+                    });
+                    return true;
+                }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return params.value.toLocaleString();
+                    }else{
+                        return '￦' + params.value.toLocaleString();
+                    }
+                },},
+                {headerName: '저항가격', field: 'resist_price', cellStyle: params=> {
+                    if(params.data.K_resist_price === '1' ) {
+                        return {color:'brown', 'font-weight': 'bold'}
+                    }
+                }, valueSetter: params => {
+                    
+                    params.data.resist_price = params.newValue;
+
+                    axios({
+                    method: "GET",
+                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    params:{
+                        id: params.data.id,
+                        through_price: params.data.through_price,
+                        leave_price: params.data.leave_price,
+                        resist_price: params.newValue,
+                        support_price: params.data.support_price,
+                        trend_high_price: params.data.trend_high_price,
+                        trend_low_price: params.data.trend_low_price,
+                        buy_expect_sum: params.data.buy_expect_sum
+                    }
+                    
+                    }).then(response => {
+                        console.log("Success", response)
+                    }).catch(error => {
+                        alert("처리 에러")
+                        console.log("Failed to updateItem1", error.response);
+                    });
+                    return true;
+                }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return params.value.toLocaleString();
+                    }else{
+                        return '￦' + params.value.toLocaleString();
+                    }
+                },},
+                {headerName: '지지가격', field: 'support_price', cellStyle: params=> {
+                    if(params.data.D_support_price === '1' ) {
+                        return {color:'indigo', 'font-weight': 'bold'}
+                    }
+                }, valueSetter: params => {
+                    
+                    params.data.support_price = params.newValue;
+
+                    axios({
+                    method: "GET",
+                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    params:{
+                        id: params.data.id,
+                        through_price: params.data.through_price,
+                        leave_price: params.data.leave_price,
+                        resist_price: params.data.resist_price,
+                        support_price: params.newValue,
+                        trend_high_price: params.data.trend_high_price,
+                        trend_low_price: params.data.trend_low_price,
+                        buy_expect_sum: params.data.buy_expect_sum
+                    }
+                    
+                    }).then(response => {
+                        console.log("Success", response)
+                    }).catch(error => {
+                        alert("처리 에러")
+                        console.log("Failed to updateItem1", error.response);
+                    });
+                    return true;
+                }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return params.value.toLocaleString();
+                    }else{
+                        return '￦' + params.value.toLocaleString();
+                    }
+                },},
+                {headerName: '추세상단가격', field: 'trend_high_price', cellStyle: params=> {
+                    if(params.data.K_trend_high_price === '1' ) {
+                        return {color:'red', 'font-weight': 'bold'}
+                    }
+                }, valueSetter: params => {
+                    
+                    params.data.trend_high_price = params.newValue;
+
+                    axios({
+                    method: "GET",
+                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    params:{
+                        id: params.data.id,
+                        through_price: params.data.through_price,
+                        leave_price: params.data.leave_price,
+                        resist_price: params.data.resist_price,
+                        support_price: params.data.support_price,
+                        trend_high_price: params.newValue,
+                        trend_low_price: params.data.trend_low_price,
+                        buy_expect_sum: params.data.buy_expect_sum
+                    }
+                    
+                    }).then(response => {
+                        console.log("Success", response)
+                    }).catch(error => {
+                        alert("처리 에러")
+                        console.log("Failed to updateItem1", error.response);
+                    });
+                    return true;
+                }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return params.value.toLocaleString();
+                    }else{
+                        return '￦' + params.value.toLocaleString();
+                    }
+                },},
+                {headerName: '추세하단가격', field: 'trend_low_price', cellStyle: params=> {
+                    if(params.data.D_trend_low_price === '1' ) {
+                        return {color:'blue', 'font-weight': 'bold'}
+                    }
+                }, valueSetter: params => {
+                    
+                    params.data.trend_low_price = params.newValue;
+
+                    axios({
+                    method: "GET",
+                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    params:{
+                        id: params.data.id,
+                        through_price: params.data.through_price,
+                        leave_price: params.data.leave_price,
+                        resist_price: params.data.resist_price,
+                        support_price: params.data.support_price,
+                        trend_high_price: params.data.trend_high_price,
+                        trend_low_price: params.newValue,
+                        buy_expect_sum: params.data.buy_expect_sum
+                    }
+                    
+                    }).then(response => {
+                        console.log("Success", response)
+                    }).catch(error => {
+                        alert("처리 에러")
+                        console.log("Failed to updateItem1", error.response);
+                    });
+                    return true;
+                }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return params.value.toLocaleString();
+                    }else{
+                        return '￦' + params.value.toLocaleString();
+                    }
+                },},
+                {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
+                {headerName: '매수예상금액', field: 'buy_expect_sum', valueSetter: params => {
+                    
+                    params.data.buy_expect_sum = params.newValue;
+
+                    axios({
+                    method: "GET",
+                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    params:{
+                        id: params.data.id,
+                        through_price: params.data.through_price,
+                        leave_price: params.data.leave_price,
+                        resist_price: params.data.resist_price,
+                        support_price: params.data.support_price,
+                        trend_high_price: params.data.trend_high_price,
+                        trend_low_price: params.data.trend_low_price,
+                        buy_expect_sum: params.newValue
+                    }
+                    
+                    }).then(response => {
+                        console.log("Success", response)
+                    }).catch(error => {
+                        alert("처리 에러")
+                        console.log("Failed to updateItem1", error.response);
+                    });
+                    return true;
+                }, editable: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') { 
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return '';
+                    }else{
+                        return '￦' + params.value.toLocaleString();
+                    }
+                },},
+                {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {
+                    if(params.data.code === '0001' || params.data.code === '1001') {
+                        return '';
+                    }else{
+                        return params.value.toLocaleString() + '억원';
+                    }
+                },},
+            ]);
+
+            return {
+                defaultColDef,
+                colDefs,
+                tooltipShowDelay,
+                tooltipHideDelay,
+            }
         },
         data() {
             return {
@@ -345,7 +363,11 @@
                             method: "GET",
                             url: "http://phills2.gonetis.com:8000/stockBalance/marketInfo/",
                             params:{
-                                market: e.data.code.trim() === '0001' ? '1001' : '2001'
+                                weekday: "D",
+                                market: e.data.code.trim(),
+                                app_key: e.data.app_key,
+                                app_secret: e.data.app_secret,
+                                access_token: e.data.access_token
                             }
                                 
                         }).then(response => {
@@ -387,6 +409,7 @@
                         method: "GET",
                         url: "http://phills2.gonetis.com:8000/stockBalance/marketMinutesInfo/",
                         params:{
+                            minute: "600",
                             market: e.data.code.trim(),
                             app_key: e.data.app_key,
                             app_secret: e.data.app_secret,

@@ -40,7 +40,8 @@
                   :paginationAutoPageSize="true"
                   :pagination="true"
                   :defaultColDef="defaultColDef"
-                  :enableBrowserTooltips="true"
+                  :tooltipShowDelay="tooltipShowDelay"
+                  :tooltipHideDelay="tooltipHideDelay"
                   @cellClicked="onCellClicked"
                 />
               </v-col>
@@ -68,6 +69,8 @@
         const picked = ref(new Date());
         const locale = reactive(ko);
         const inputFormat = ref('yyyy-MM-dd');
+        const tooltipShowDelay = ref(null);
+        const tooltipHideDelay = ref(null);
         
         const defaultColDef = ref({
           flex: 1,
@@ -75,13 +78,16 @@
           minWidth: 100,
         });
   
-        onBeforeMount(() => {});
+        onBeforeMount(() => {
+          tooltipShowDelay.value = 0;
+          tooltipHideDelay.value = 2000;
+        });
         
         const colDefs = ref([
             /* {headerName: 'No', field: 'no'}, */
             {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
-            {headerName: '검색일시', field: 'search_dtm', tolltipField: 'search_dtm', },
-            {headerName: '검색명', field: 'search_name',},
+            {headerName: '검색일시', field: 'search_dtm', tolltipField: 'search_dtm'},
+            {headerName: '검색명', field: 'search_name', tooltipField: 'search_name'},
             {headerName: '종목코드', field: 'code', /* onCellClicked: (event) => {
               axios({
                 method: "GET",
@@ -103,7 +109,7 @@
               if(charturl != null) 
                 window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
             }, */},
-            {headerName: '종목명', field: 'name',},
+            {headerName: '종목명', field: 'name', tooltipField: 'name'},
             {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
             {headerName: '고가', field: 'high_price', editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
             {headerName: '저가', field: 'low_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
@@ -118,17 +124,20 @@
           locale,
           inputFormat,
           defaultColDef,
+          tooltipShowDelay,
+          tooltipHideDelay,
           colDefs,
         }
       },
       data() {
         return {
             rowData: [],
-            selected1: '거래폭발',
+            selected1: '',
             inputText: '',
             columnApi: null,
             
             options1: [
+              { text: '---------------', value: '' },
               { text: '거래폭발', value: '거래폭발' },
               { text: '단기추세', value: '단기추세' },          
               { text: '투자혁명', value: '투자혁명' }
