@@ -91,7 +91,7 @@
             {headerName: '종목코드', field: 'code', /* onCellClicked: (event) => {
               axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+                url: "http://phills2.asuscomm.com:8000/stockOrder/chart/",
                 params:{
                   code: event.node.data.code.trim(),
                   company: event.node.data.name.trim(),
@@ -99,7 +99,7 @@
                               
               }).then(response => {
                 console.log("Success", response)
-                charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+                charturl = "http://phills2.asuscomm.com:8000/stockOrder/"+response.data[0].name+"/"
                 window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                 charturl = null
               }).catch(error => {
@@ -162,7 +162,7 @@
           if(e.column.colId === 'code'){
             axios({
               method: "GET",
-              url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+              url: "http://phills2.asuscomm.com:8000/stockOrder/chart/",
               params:{
                 code: e.data.code.trim(),
                 company: e.data.name.trim(),
@@ -170,7 +170,7 @@
                               
             }).then(response => {
               console.log("Success", response)
-              charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+              charturl = "http://phills2.asuscomm.com:8000/stockOrder/"+response.data[0].name+"/"
               window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
               charturl = null
             }).catch(error => {
@@ -183,7 +183,7 @@
           if(e.column.colId === 'name'){  
             axios({
               method: "GET",
-              url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
+              url: "http://phills2.asuscomm.com:8000/stockOrder/minutesInfo/",
               params:{
                 code: e.data.code.trim(),
                 company: e.data.name.trim(),
@@ -194,7 +194,7 @@
                         
             }).then(response => {
               console.log("Success", response)
-              charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+              charturl = "http://phills2.asuscomm.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
               window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
               charturl = null
             }).catch(error => {
@@ -209,7 +209,7 @@
         runStockSearch: function(id) { 
           axios({
             method: "GET",
-            url: "http://phills2.gonetis.com:8000/stockOrder/runStockSearch/",
+            url: "http://phills2.asuscomm.com:8000/stockOrder/runStockSearch/",
             params: {
               search_choice: id,
               acct_no: this.$route.params.acct_no,
@@ -241,7 +241,7 @@
   
           axios({
             method: "GET",
-            url: "http://phills2.gonetis.com:8000/stockOrder/stockSearch/",
+            url: "http://phills2.asuscomm.com:8000/stockOrder/stockSearch/",
             params:{
               search_day: year.toString()+month.toString()+day.toString(),
               search_name: this.selected1,

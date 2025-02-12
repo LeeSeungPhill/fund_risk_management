@@ -77,7 +77,7 @@
 
                     axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    url: "http://phills2.asuscomm.com:8000/interestItem/update/",
                     params:{
                         id: params.data.id,
                         through_price: params.newValue,
@@ -113,7 +113,7 @@
 
                     axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    url: "http://phills2.asuscomm.com:8000/interestItem/update/",
                     params:{
                         id: params.data.id,
                         through_price: params.data.through_price,
@@ -149,7 +149,7 @@
 
                     axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    url: "http://phills2.asuscomm.com:8000/interestItem/update/",
                     params:{
                         id: params.data.id,
                         through_price: params.data.through_price,
@@ -185,7 +185,7 @@
 
                     axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    url: "http://phills2.asuscomm.com:8000/interestItem/update/",
                     params:{
                         id: params.data.id,
                         through_price: params.data.through_price,
@@ -221,7 +221,7 @@
 
                     axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    url: "http://phills2.asuscomm.com:8000/interestItem/update/",
                     params:{
                         id: params.data.id,
                         through_price: params.data.through_price,
@@ -257,7 +257,7 @@
 
                     axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    url: "http://phills2.asuscomm.com:8000/interestItem/update/",
                     params:{
                         id: params.data.id,
                         through_price: params.data.through_price,
@@ -290,7 +290,7 @@
 
                     axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com:8000/interestItem/update/",
+                    url: "http://phills2.asuscomm.com:8000/interestItem/update/",
                     params:{
                         id: params.data.id,
                         through_price: params.data.through_price,
@@ -361,7 +361,7 @@
                     if(e.data.code === '0001' || e.data.code === '1001'){
                         axios({
                             method: "GET",
-                            url: "http://phills2.gonetis.com:8000/stockBalance/marketInfo/",
+                            url: "http://phills2.asuscomm.com:8000/stockBalance/marketInfo/",
                             params:{
                                 weekday: "D",
                                 market: e.data.code.trim(),
@@ -372,7 +372,7 @@
                                 
                         }).then(response => {
                             console.log("Success", response)
-                            charturl = "http://phills2.gonetis.com:8000/stockBalance/"+response.data[0].market+"/"
+                            charturl = "http://phills2.asuscomm.com:8000/stockBalance/"+response.data[0].market+"/"
                             window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                             charturl = null
                         }).catch(error => {
@@ -384,7 +384,7 @@
                     }else{
                         axios({
                             method: "GET",
-                            url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+                            url: "http://phills2.asuscomm.com:8000/stockOrder/chart/",
                             params:{
                                 code: e.data.code.trim(),
                                 company: e.data.name.trim(),
@@ -392,7 +392,7 @@
                                                 
                         }).then(response => {
                             console.log("Success", response)
-                            charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+                            charturl = "http://phills2.asuscomm.com:8000/stockOrder/"+response.data[0].name+"/"
                             window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                             charturl = null
                         }).catch(error => {
@@ -407,7 +407,7 @@
                     if(e.data.code === '0001' || e.data.code === '1001'){
                         axios({
                         method: "GET",
-                        url: "http://phills2.gonetis.com:8000/stockBalance/marketMinutesInfo/",
+                        url: "http://phills2.asuscomm.com:8000/stockBalance/marketMinutesInfo/",
                         params:{
                             minute: "600",
                             market: e.data.code.trim(),
@@ -418,7 +418,7 @@
                                     
                         }).then(response => {
                             console.log("Success", response)
-                            charturl = "http://phills2.gonetis.com:8000/stockBalance/minutes_"+response.data[0].market+"/"
+                            charturl = "http://phills2.asuscomm.com:8000/stockBalance/minutes_"+response.data[0].market+"/"
                             window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                             charturl = null
                         }).catch(error => {
@@ -431,7 +431,7 @@
                     }else{
                         axios({
                             method: "GET",
-                            url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
+                            url: "http://phills2.asuscomm.com:8000/stockOrder/minutesInfo/",
                             params:{
                                 code: e.data.code.trim(),
                                 company: e.data.name.trim(),
@@ -442,7 +442,7 @@
                                     
                         }).then(response => {
                             console.log("Success", response)
-                            charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+                            charturl = "http://phills2.asuscomm.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
                             window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
                             charturl = null
                         }).catch(error => {
@@ -457,7 +457,7 @@
             fetchData: function(){
                 axios({
                     method: "GET",
-                    url: "http://phills2.gonetis.com:8000/interestItem/list/",
+                    url: "http://phills2.asuscomm.com:8000/interestItem/list/",
                     params:{
                         acct_no: this.$route.params.acct_no,
                         app_key: this.$route.params.app_key,
@@ -482,7 +482,7 @@
                     if(data.chk){
                         axios({
                             method: "DELETE",
-                            url: "http://phills2.gonetis.com:8000/kis/interestItem/" + data.id + "/", // http://phills2.gonetis.com:8000/kis/interestItem/1 로 delete 이벤트 전송
+                            url: "http://phills2.asuscomm.com:8000/kis/interestItem/" + data.id + "/", // http://phills2.asuscomm.com:8000/kis/interestItem/1 로 delete 이벤트 전송
                         }).then((response) => {
                             console.log("Success", response);
                             this.fetchData()

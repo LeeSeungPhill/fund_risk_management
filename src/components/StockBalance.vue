@@ -30,7 +30,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 
-let url = "http://phills2.gonetis.com:8000/stockBalance/balanceList/"; //장고 서버 주소
+let url = "http://phills2.asuscomm.com:8000/stockBalance/balanceList/"; //장고 서버 주소
 
 export default defineComponent({
   name: 'App',
@@ -61,7 +61,7 @@ export default defineComponent({
 
         axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com:8000/stockBalance/update/",
+                url: "http://phills2.asuscomm.com:8000/stockBalance/update/",
                 params:{
                   id: params.data.id,
                   sign_resist_price: params.newValue,
@@ -89,7 +89,7 @@ export default defineComponent({
 
         axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com:8000/stockBalance/update/",
+                url: "http://phills2.asuscomm.com:8000/stockBalance/update/",
                 params:{
                   id: params.data.id,
                   sign_resist_price: params.data.sign_resist_price,
@@ -117,7 +117,7 @@ export default defineComponent({
 
         axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com:8000/stockBalance/update/",
+                url: "http://phills2.asuscomm.com:8000/stockBalance/update/",
                 params:{
                   id: params.data.id,
                   sign_resist_price: params.data.sign_resist_price,
@@ -145,7 +145,7 @@ export default defineComponent({
 
         axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com:8000/stockBalance/update/",
+                url: "http://phills2.asuscomm.com:8000/stockBalance/update/",
                 params:{
                   id: params.data.id,
                   sign_resist_price: params.data.sign_resist_price,
@@ -175,7 +175,7 @@ export default defineComponent({
 
         axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com:8000/stockBalance/update/",
+                url: "http://phills2.asuscomm.com:8000/stockBalance/update/",
                 params:{
                   id: params.data.id,
                   sign_resist_price: params.data.sign_resist_price,
@@ -221,7 +221,7 @@ export default defineComponent({
       if(e.column.colId === 'code'){
         axios({
           method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+          url: "http://phills2.asuscomm.com:8000/stockOrder/chart/",
           params:{
             code: e.data.code.trim(),
             company: e.data.name.trim(),
@@ -229,7 +229,7 @@ export default defineComponent({
                                                 
         }).then(response => {
           console.log("Success", response)
-          charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+          charturl = "http://phills2.asuscomm.com:8000/stockOrder/"+response.data[0].name+"/"
           window.open(charturl, "PopupWin", "width=1000,height=1000", true);
           charturl = null
         }).catch(error => {
@@ -243,7 +243,7 @@ export default defineComponent({
       if(e.column.colId === 'name'){  
         axios({
           method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
+          url: "http://phills2.asuscomm.com:8000/stockOrder/minutesInfo/",
           params:{
             code: e.data.code.trim(),
             company: e.data.name.trim(),
@@ -254,7 +254,7 @@ export default defineComponent({
                                     
         }).then(response => {
           console.log("Success", response)
-          charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+          charturl = "http://phills2.asuscomm.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
           window.open(charturl, "PopupWin", "width=1000,height=1000", true);
           charturl = null
         }).catch(error => {
@@ -291,7 +291,7 @@ export default defineComponent({
     marketReg(){
       axios({
       method: "GET",
-      url: "http://phills2.gonetis.com:8000/stockFundMng/marketReg/",
+      url: "http://phills2.asuscomm.com:8000/stockFundMng/marketReg/",
       params:{
         acct_no: this.$route.params.acct_no,
         app_key: this.$route.params.app_key,
@@ -309,7 +309,7 @@ export default defineComponent({
     riskReg(){
       axios({
       method: "GET",
-      url: "http://phills2.gonetis.com:8000/stockMarketMng/list/",
+      url: "http://phills2.asuscomm.com:8000/stockMarketMng/list/",
       params:{
         acct_no: this.$route.params.acct_no,
         app_key: this.$route.params.app_key,

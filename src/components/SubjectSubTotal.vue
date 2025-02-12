@@ -157,7 +157,7 @@
         if(e.column.colId === 'code'){
           axios({
             method: "GET",
-            url: "http://phills2.gonetis.com:8000/stockOrder/chart/",
+            url: "http://phills2.asuscomm.com:8000/stockOrder/chart/",
             params:{
               code: e.data.code.trim(),
               company: e.data.name.trim(),
@@ -165,7 +165,7 @@
                                                   
           }).then(response => {
             console.log("Success", response)
-            charturl = "http://phills2.gonetis.com:8000/stockOrder/"+response.data[0].name+"/"
+            charturl = "http://phills2.asuscomm.com:8000/stockOrder/"+response.data[0].name+"/"
             window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
             charturl = null
           }).catch(error => {
@@ -179,7 +179,7 @@
         if(e.column.colId === 'name'){  
           axios({
             method: "GET",
-            url: "http://phills2.gonetis.com:8000/stockOrder/minutesInfo/",
+            url: "http://phills2.asuscomm.com:8000/stockOrder/minutesInfo/",
             params:{
               code: e.data.code.trim(),
               company: e.data.name.trim(),
@@ -190,7 +190,7 @@
                                       
           }).then(response => {
             console.log("Success", response)
-            charturl = "http://phills2.gonetis.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+            charturl = "http://phills2.asuscomm.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
             window.open(charturl, "PopupWin", "width=1000,height=1000", true); 
             charturl = null
           }).catch(error => {
@@ -204,7 +204,7 @@
       fetchData: function(){
         axios({
           method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/subTotal/",
+          url: "http://phills2.asuscomm.com:8000/stockOrder/subTotal/",
           params:{
             tr_subject: '기관',
             tr_type: this.selected1,
@@ -229,7 +229,7 @@
         });
         axios({
           method: "GET",
-          url: "http://phills2.gonetis.com:8000/stockOrder/subTotal/",
+          url: "http://phills2.asuscomm.com:8000/stockOrder/subTotal/",
           params:{
             tr_subject: '외국인',
             tr_type: this.selected1,

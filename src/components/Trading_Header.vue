@@ -42,9 +42,9 @@ export default {
             app_secret: null,
             access_token: null,
             token_publ_date: null,
-            selected: 'phills2',
+            selected: 'phills75',
             options: [
-              { text: 'Terra', value: 'phills2' }, { text: 'Tess', value: 'chichipa' }, { text: 'Leo', value: 'phills13' }, { text: 'Sharon', value: 'phills15' }
+                { text: 'Jupyter', value: 'phills75' }, { text: 'Terra', value: 'phills2' }, { text: 'Tess', value: 'chichipa' }, { text: 'Mama', value: 'yh480825' }, { text: 'Leo', value: 'phills13' }, { text: 'Sharon', value: 'phills15' }
             ],
             
         }
@@ -53,7 +53,7 @@ export default {
         auth: function() { 
             axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com:8000/stockAccount/",
+                url: "http://phills2.asuscomm.com:8000/stockAccount/",
                 params:{
                     nick_name: this.selected
                 }
@@ -76,7 +76,7 @@ export default {
         reauth: function() {
             axios({
                 method: "GET",
-                url: "http://phills2.gonetis.com:8000/stockAccount/init/",
+                url: "http://phills2.asuscomm.com:8000/stockAccount/init/",
                     params:{
                         nick_name: this.selected
                     }

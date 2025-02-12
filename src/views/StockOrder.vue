@@ -98,7 +98,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 
-let url = "http://phills2.gonetis.com:8000/kis/stockOrder/"; //장고 서버 주소
+let url = "http://phills2.asuscomm.com:8000/kis/stockOrder/"; //장고 서버 주소
 
 export default defineComponent({
   name: 'App',
@@ -135,7 +135,7 @@ export default defineComponent({
 
           axios({
             method: "GET",
-            url: "http://phills2.gonetis.com:8000/stockOrder/update/",
+            url: "http://phills2.asuscomm.com:8000/stockOrder/update/",
             params:{
               id: params.data.id,
               order_no: params.data.order_no,
@@ -169,7 +169,7 @@ export default defineComponent({
           
           axios({
             method: "GET",
-            url: "http://phills2.gonetis.com:8000/stockOrder/update/",
+            url: "http://phills2.asuscomm.com:8000/stockOrder/update/",
             params:{
               id: params.data.id,
               order_no: params.data.order_no,
@@ -261,7 +261,7 @@ export default defineComponent({
           if(data.order_stat === '01'){
             axios({
               method: "DELETE",
-              url: url + data.id + "/", // http://phills2.gonetis.com:8000/kis/stockOrder/1 로 delete 이벤트 전송
+              url: url + data.id + "/", // http://phills2.asuscomm.com:8000/kis/stockOrder/1 로 delete 이벤트 전송
             }).then((response) => {
               console.log("Success", response);
               alert("주문삭제 완료")
@@ -289,7 +289,7 @@ export default defineComponent({
             }  
             axios({
               method: "GET",
-              url: "http://phills2.gonetis.com:8000/stockOrder/cancel/",
+              url: "http://phills2.asuscomm.com:8000/stockOrder/cancel/",
               params:{
                 id: data.id,
                 order_no: data.order_no,
@@ -333,7 +333,7 @@ export default defineComponent({
     sendLevel: function(level){
       axios({
         method: "GET",
-        url: "http://phills2.gonetis.com:8000/stockMarketMng/list/",
+        url: "http://phills2.asuscomm.com:8000/stockMarketMng/list/",
         params:{
           market_level: level,
           acct_no: this.$route.params.acct_no,
@@ -353,7 +353,7 @@ export default defineComponent({
     sendOrderList() {
       axios({
         method: "GET",
-        url: "http://phills2.gonetis.com:8000/stockOrder/send/",
+        url: "http://phills2.asuscomm.com:8000/stockOrder/send/",
         params:{
           acct_no: this.$route.params.acct_no,
           app_key: this.$route.params.app_key,
@@ -380,7 +380,7 @@ export default defineComponent({
     getStockOrderList() {
       axios({
         method: "GET",
-        url: "http://phills2.gonetis.com:8000/stockOrder/orderList/",
+        url: "http://phills2.asuscomm.com:8000/stockOrder/orderList/",
         params:{
           acct_no: this.$route.params.acct_no,
           app_key: this.$route.params.app_key,
@@ -401,7 +401,7 @@ export default defineComponent({
     getOrderCompleteList() {
       axios({
         method: "GET",
-        url: "http://phills2.gonetis.com:8000/stockOrderComplete/",
+        url: "http://phills2.asuscomm.com:8000/stockOrderComplete/",
         params:{
           acct_no: this.$route.params.acct_no,
           app_key: this.$route.params.app_key,
