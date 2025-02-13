@@ -28,7 +28,8 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 
-let url = "http://phills2.asuscomm.com:8000/stockFundMng/list/"; //장고 서버 주소
+const host = process.env.VUE_APP_BASE_URL
+let url = host + "/stockFundMng/list/"; //장고 서버 주소
 
 export default defineComponent({
   name: 'App',

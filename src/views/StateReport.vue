@@ -30,7 +30,8 @@
 import stockBalance from '@/components/StockBalance.vue';
 import axios from "axios";
 
-let url = "http://phills2.asuscomm.com:8000/stockFundMng/list/"; //장고 서버 주소
+const host = process.env.VUE_APP_BASE_URL
+let url = host + "/stockFundMng/list/"; //장고 서버 주소
 
 export default {
   name: 'stateReport',
@@ -60,7 +61,7 @@ export default {
     info: function(market, weekday){
       axios({
         method: "GET",
-        url: "http://phills2.asuscomm.com:8000/stockBalance/marketInfo/",
+        url: host + "/stockBalance/marketInfo/",
         params:{
           market: market,
           weekday: weekday,
@@ -71,7 +72,7 @@ export default {
             
       }).then(response => {
         console.log("Success", response)
-        this.charturl = "http://phills2.asuscomm.com:8000/stockBalance/"+response.data[0].market+"/"
+        this.charturl = host + "/stockBalance/"+response.data[0].market+"/"
         window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
         this.charturl = null
       }).catch(error => {
@@ -84,7 +85,7 @@ export default {
     minutesInfo: function(market, minute){
         axios({
           method: "GET",
-          url: "http://phills2.asuscomm.com:8000/stockBalance/marketMinutesInfo/",
+          url: host + "/stockBalance/marketMinutesInfo/",
           params:{
             market: market,
             minute: minute,
@@ -95,7 +96,7 @@ export default {
                     
         }).then(response => {
           console.log("Success", response)
-          this.charturl = "http://phills2.asuscomm.com:8000/stockBalance/minutes_"+response.data[0].market+"/"
+          this.charturl = host + "/stockBalance/minutes_"+response.data[0].market+"/"
           window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
           this.charturl = null
         }).catch(error => {

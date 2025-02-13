@@ -98,7 +98,8 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 
-let url = "http://phills2.asuscomm.com:8000/kis/stockOrder/"; //장고 서버 주소
+const host = process.env.VUE_APP_BASE_URL
+let url = host + "/kis/stockOrder/"; //장고 서버 주소
 
 export default defineComponent({
   name: 'App',
@@ -135,7 +136,7 @@ export default defineComponent({
 
           axios({
             method: "GET",
-            url: "http://phills2.asuscomm.com:8000/stockOrder/update/",
+            url: host + "/stockOrder/update/",
             params:{
               id: params.data.id,
               order_no: params.data.order_no,
@@ -169,7 +170,7 @@ export default defineComponent({
           
           axios({
             method: "GET",
-            url: "http://phills2.asuscomm.com:8000/stockOrder/update/",
+            url: host + "/stockOrder/update/",
             params:{
               id: params.data.id,
               order_no: params.data.order_no,
@@ -289,7 +290,7 @@ export default defineComponent({
             }  
             axios({
               method: "GET",
-              url: "http://phills2.asuscomm.com:8000/stockOrder/cancel/",
+              url: host + "/stockOrder/cancel/",
               params:{
                 id: data.id,
                 order_no: data.order_no,
@@ -333,7 +334,7 @@ export default defineComponent({
     sendLevel: function(level){
       axios({
         method: "GET",
-        url: "http://phills2.asuscomm.com:8000/stockMarketMng/list/",
+        url: host + "/stockMarketMng/list/",
         params:{
           market_level: level,
           acct_no: this.$route.params.acct_no,
@@ -353,7 +354,7 @@ export default defineComponent({
     sendOrderList() {
       axios({
         method: "GET",
-        url: "http://phills2.asuscomm.com:8000/stockOrder/send/",
+        url: host + "/stockOrder/send/",
         params:{
           acct_no: this.$route.params.acct_no,
           app_key: this.$route.params.app_key,
@@ -380,7 +381,7 @@ export default defineComponent({
     getStockOrderList() {
       axios({
         method: "GET",
-        url: "http://phills2.asuscomm.com:8000/stockOrder/orderList/",
+        url: host + "/stockOrder/orderList/",
         params:{
           acct_no: this.$route.params.acct_no,
           app_key: this.$route.params.app_key,
@@ -401,7 +402,7 @@ export default defineComponent({
     getOrderCompleteList() {
       axios({
         method: "GET",
-        url: "http://phills2.asuscomm.com:8000/stockOrderComplete/",
+        url: host + "/stockOrderComplete/",
         params:{
           acct_no: this.$route.params.acct_no,
           app_key: this.$route.params.app_key,

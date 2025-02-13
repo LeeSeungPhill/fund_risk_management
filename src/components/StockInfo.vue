@@ -46,6 +46,8 @@
 <script>
   import axios from "axios";
 
+  const host = process.env.VUE_APP_BASE_URL
+
   export default {
     data() {
       return {
@@ -80,7 +82,7 @@
       searchStock: function(data){
         axios({
           method: "GET",
-          url: "http://phills2.asuscomm.com:8000/stockOrder/info/",
+          url: host + "/stockOrder/info/",
           params:{
             company: data.company,
             app_key: this.$route.params.app_key,
@@ -101,7 +103,7 @@
           this.prdy_vol_rate = response.data[0].prdy_vol_rate
           this.code = response.data[0].code
           this.name = data.company
-          this.charturl = "http://phills2.asuscomm.com:8000/stockOrder/"+data.company+response.data[0].YmdHM+"/"
+          this.charturl = host + "/stockOrder/"+data.company+response.data[0].YmdHM+"/"
           window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
         }).catch(error => {
           alert("처리 에러")
@@ -112,7 +114,7 @@
         if (this.code != null && this.name != null){
           axios({
             method: "GET",
-            url: "http://phills2.asuscomm.com:8000/stockOrder/minutesInfo/",
+            url: host + "/stockOrder/minutesInfo/",
             params:{
               code: this.code,
               company: this.name,
@@ -123,7 +125,7 @@
                       
           }).then(response => {
             console.log("Success", response)
-            this.charturl = "http://phills2.asuscomm.com:8000/stockOrder/minutes_"+response.data[0].name+"/"
+            this.charturl = host + "/stockOrder/minutes_"+response.data[0].name+"/"
             window.open(this.charturl, "PopupWin", "width=1000,height=1000", true); 
             this.charturl = null
           }).catch(error => {
@@ -138,7 +140,7 @@
       saveInterestItem: function(){
           axios({
             method: "POST",
-            url: "http://phills2.asuscomm.com:8000/kis/interestItem/",
+            url: host + "/kis/interestItem/",
             data: {
               acct_no: this.$route.params.acct_no,
               code: this.code,

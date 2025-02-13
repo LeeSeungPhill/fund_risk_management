@@ -79,8 +79,9 @@
 </template>
 <script>
   import axios from "axios";
-  
-  let url = "http://phills2.asuscomm.com:8000/kis/stockOrder/"; //장고 서버 주소
+
+  const host = process.env.VUE_APP_BASE_URL
+  let url = host + "/kis/stockOrder/"; //장고 서버 주소
 
   export default {
     name: 'App',
@@ -195,7 +196,7 @@
       getAssetInfo() {
         axios({
           method: "GET",
-          url: "http://phills2.asuscomm.com:8000/stockOrder/assetInfo/",
+          url: host + "/stockOrder/assetInfo/",
           params:{
             acct_no: this.$route.params.acct_no,
             app_key: this.$route.params.app_key,

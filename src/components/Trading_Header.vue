@@ -33,6 +33,8 @@
 <script>
 import axios from "axios";
 
+const host = process.env.VUE_APP_BASE_URL
+
 export default {
     data: () => {
         return {
@@ -53,7 +55,7 @@ export default {
         auth: function() { 
             axios({
                 method: "GET",
-                url: "http://phills2.asuscomm.com:8000/stockAccount/",
+                url: host + "/stockAccount/",
                 params:{
                     nick_name: this.selected
                 }
@@ -76,7 +78,7 @@ export default {
         reauth: function() {
             axios({
                 method: "GET",
-                url: "http://phills2.asuscomm.com:8000/stockAccount/init/",
+                url: host + "/stockAccount/init/",
                     params:{
                         nick_name: this.selected
                     }
