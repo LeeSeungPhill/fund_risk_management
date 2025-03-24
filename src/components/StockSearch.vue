@@ -11,6 +11,8 @@
                 <v-btn @click="runStockSearch('0')" style="background: rgb(255, 0, 195)">[거래폭발]</v-btn>
                 <v-btn @click="runStockSearch('1')" style="background: rgb(195, 0, 255)">[단기추세]</v-btn>
                 <v-btn @click="runStockSearch('2')" style="background: rgb(135, 0, 135)">[투자혁명]</v-btn>
+                <v-btn @click="runStockSearch('3')" style="background: rgb(135, 0, 135)">[파워급등주]</v-btn>
+                <v-btn @click="runStockSearch('4')" style="background: rgb(135, 0, 135)">[파워종목]</v-btn>
               </v-col>
           </v-row>    
           <v-row no-gutter>      
