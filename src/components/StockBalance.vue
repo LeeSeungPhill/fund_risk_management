@@ -47,11 +47,11 @@ export default defineComponent({
     });
 
     const colDefs = ref([
-      {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 } },
-      {headerName: '종목코드', field: 'code'},
-      {headerName: '종목명', field: 'name'},
-      {headerName: '매입가', field: 'purchase_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 }, width: 30},
+      {headerName: '종목코드', field: 'code', width: 60},
+      {headerName: '종목명', field: 'name', width: 120},
+      {headerName: '매입가', field: 'purchase_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();}, width: 80},
+      {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '저항가격', field: 'sign_resist_price', cellStyle: params=> {
         if(params.data.K_sign_resist_price === '1' ) {
           return {color:'orange', 'font-weight': 'bold'}
@@ -79,7 +79,7 @@ export default defineComponent({
                   console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '지지가격', field: 'sign_support_price', cellStyle: params=> {
         if(params.data.D_sign_support_price === '1' ) {
           return {color:'skyblue', 'font-weight': 'bold'}
@@ -107,7 +107,7 @@ export default defineComponent({
                   console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '목표가격', field: 'end_target_price', cellStyle: params=> {
         if(params.data.K_target_price === '1' ) {
           return {color:'red', 'font-weight': 'bold'}
@@ -135,7 +135,7 @@ export default defineComponent({
                   console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '이탈가격', field: 'end_loss_price', cellStyle: params=> {
         if(params.data.D_loss_price === '1' ) {
           return {color:'blue', 'font-weight': 'bold'}
@@ -163,14 +163,14 @@ export default defineComponent({
                     console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
-      {headerName: '수익률', field: 'earnings_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},},
-      {headerName: '보유수량', field: 'purchase_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
-      {headerName: '매도가능수량', field: 'avail_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},},
-      {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '평가금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
-      {headerName: '증감액', field: 'valuation_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},width: 80},
+      {headerName: '수익률', field: 'earnings_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},width: 80},
+      {headerName: '보유수량', field: 'purchase_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},width: 80},
+      {headerName: '매도가능수량', field: 'avail_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},width: 80},
+      {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '평가금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '증감액', field: 'valuation_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '매매계획', field: 'trading_plan', valueFormatter: (params) => {return params.value === 'B' ? '매수' : params.value === 'S' ? '매도' : params.value === 'H' ? '보유' : ''}, valueSetter: params => {
                 
         params.data.trading_plan = params.newValue;
@@ -194,8 +194,8 @@ export default defineComponent({
                   console.log("Failed to updateItem1", error.response);
                 });
                 return true;
-      }, editable: true, cellEditor: 'agSelectCellEditor', cellEditorParams: {values:['H','S','B']},},
-      {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},},
+      }, editable: true, cellEditor: 'agSelectCellEditor', cellEditorParams: {values:['H','S','B']},width: 50},
+      {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},width: 80},
     ]);
 
     return {
