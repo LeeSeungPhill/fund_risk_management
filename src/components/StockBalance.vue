@@ -65,6 +65,7 @@ export default defineComponent({
                 url: host + "/stockBalance/update/",
                 params:{
                   id: params.data.id,
+                  code: params.data.code,
                   sign_resist_price: params.newValue,
                   sign_support_price: params.data.sign_support_price,
                   end_target_price: params.data.end_target_price,
@@ -93,6 +94,7 @@ export default defineComponent({
                 url: host + "/stockBalance/update/",
                 params:{
                   id: params.data.id,
+                  code: params.data.code,
                   sign_resist_price: params.data.sign_resist_price,
                   sign_support_price: params.newValue,
                   end_target_price: params.data.end_target_price,
@@ -121,6 +123,7 @@ export default defineComponent({
                 url: host + "/stockBalance/update/",
                 params:{
                   id: params.data.id,
+                  code: params.data.code,
                   sign_resist_price: params.data.sign_resist_price,
                   sign_support_price: params.data.sign_support_price,
                   end_target_price: params.newValue,
@@ -149,6 +152,7 @@ export default defineComponent({
                 url: host + "/stockBalance/update/",
                 params:{
                   id: params.data.id,
+                  code: params.data.code,
                   sign_resist_price: params.data.sign_resist_price,
                   sign_support_price: params.data.sign_support_price,
                   end_target_price: params.data.end_target_price,
@@ -180,6 +184,7 @@ export default defineComponent({
                 url: host + "/stockBalance/update/",
                 params:{
                   id: params.data.id,
+                  code: params.data.code,
                   sign_resist_price: params.data.sign_resist_price,
                   sign_support_price: params.data.sign_support_price,
                   end_target_price: params.data.end_target_price,

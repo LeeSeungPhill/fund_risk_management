@@ -82,6 +82,7 @@
                     url: host + "/interestItem/update/",
                     params:{
                         id: params.data.id,
+                        code: params.data.code,
                         through_price: params.newValue,
                         leave_price: params.data.leave_price,
                         resist_price: params.data.resist_price,
@@ -118,6 +119,7 @@
                     url: host + "/interestItem/update/",
                     params:{
                         id: params.data.id,
+                        code: params.data.code,
                         through_price: params.data.through_price,
                         leave_price: params.newValue,
                         resist_price: params.data.resist_price,
@@ -154,6 +156,7 @@
                     url: host + "/interestItem/update/",
                     params:{
                         id: params.data.id,
+                        code: params.data.code,
                         through_price: params.data.through_price,
                         leave_price: params.data.leave_price,
                         resist_price: params.newValue,
@@ -190,6 +193,7 @@
                     url: host + "/interestItem/update/",
                     params:{
                         id: params.data.id,
+                        code: params.data.code,
                         through_price: params.data.through_price,
                         leave_price: params.data.leave_price,
                         resist_price: params.data.resist_price,
@@ -226,6 +230,7 @@
                     url: host + "/interestItem/update/",
                     params:{
                         id: params.data.id,
+                        code: params.data.code,
                         through_price: params.data.through_price,
                         leave_price: params.data.leave_price,
                         resist_price: params.data.resist_price,
@@ -262,6 +267,7 @@
                     url: host + "/interestItem/update/",
                     params:{
                         id: params.data.id,
+                        code: params.data.code,
                         through_price: params.data.through_price,
                         leave_price: params.data.leave_price,
                         resist_price: params.data.resist_price,
@@ -295,6 +301,7 @@
                     url: host + "/interestItem/update/",
                     params:{
                         id: params.data.id,
+                        code: params.data.code,
                         through_price: params.data.through_price,
                         leave_price: params.data.leave_price,
                         resist_price: params.data.resist_price,
