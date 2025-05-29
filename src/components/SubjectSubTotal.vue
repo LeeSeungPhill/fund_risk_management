@@ -31,7 +31,7 @@
         <v-row>
           <v-col align="center" >
             <ag-grid-vue 
-                  style="width: 100%; height: 350px;" 
+                  style="width: 100%; height: 510px;" 
                   class="ag-theme-balham" 
                   :columnDefs="colDefs1" 
                   :rowData="rowData1" 
@@ -45,7 +45,7 @@
           </v-col>
           <v-col align="center" >
             <ag-grid-vue 
-                  style="width: 100%; height: 350px;" 
+                  style="width: 100%; height: 510px;" 
                   class="ag-theme-balham" 
                   :columnDefs="colDefs2" 
                   :rowData="rowData2" 

@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div class="app-container">
     <Header></Header>
-    <router-view></router-view>
+    <div class="router-container">
+      <router-view></router-view>
+    </div>
     <Footer></Footer>
   </div>
 </template>
@@ -23,3 +25,15 @@ export default {
   }),
 }
 </script>
+<style scoped>
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.router-container {
+  flex: 1;
+  overflow-y: auto;
+}
+</style>

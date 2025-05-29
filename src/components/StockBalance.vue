@@ -8,16 +8,17 @@
             </v-subheader>
           </v-col>
         </v-row>
-        <ag-grid-vue 
-          style="width: 100%; height: 300px;" 
-          class="ag-theme-balham" 
-          :columnDefs="colDefs" 
-          :rowData="rowData" 
-          :paginationAutoPageSize="true"
-          :pagination="true"
-          :defaultColDef="defaultColDef"
-          @cellClicked="onCellClicked"
-        />
+        <div class="grid-wrapper">
+          <ag-grid-vue 
+            class="ag-theme-balham" 
+            :columnDefs="colDefs" 
+            :rowData="rowData" 
+            :paginationAutoPageSize="true"
+            :pagination="true"
+            :defaultColDef="defaultColDef"
+            @cellClicked="onCellClicked"
+          />
+      </div>
     </v-container>      
   </div>
 </template>
@@ -342,6 +343,13 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+.grid-wrapper {
+  height: 630px;
+}
+.ag-theme-balham {
+  height: 100%;
+  width: 100%;
+}
 .up {
     font-weight: bold;
     color: red;
