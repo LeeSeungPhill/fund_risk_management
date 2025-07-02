@@ -55,7 +55,7 @@ export default defineComponent({
       {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '손절가', field: 'limit_price', cellStyle: params=> {
         if(params.data.D_limit_price === '1' ) {
-          return {color:'skyblue', 'font-weight': 'bold'}
+          return {color:'blueviolet', 'font-weight': 'bold'}
         }
       },valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '손절금액', field: 'limit_amt', valueSetter: params => {
