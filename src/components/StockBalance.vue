@@ -53,6 +53,37 @@ export default defineComponent({
       {headerName: '종목명', field: 'name', width: 120},
       {headerName: '매입가', field: 'purchase_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();}, width: 80},
       {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '손절가', field: 'limit_price', cellStyle: params=> {
+        if(params.data.D_limit_price === '1' ) {
+          return {color:'skyblue', 'font-weight': 'bold'}
+        }
+      },valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '손절금액', field: 'limit_amt', valueSetter: params => {
+                
+        params.data.limit_amt = params.newValue;
+
+        axios({
+                method: "GET",
+                url: host + "/stockBalance/update/",
+                params:{
+                  id: params.data.id,
+                  code: params.data.code,
+                  sign_resist_price: params.data.sign_resist_price,
+                  sign_support_price: params.data.sign_support_price,
+                  end_target_price: params.data.end_target_price,
+                  end_loss_price: params.data.end_loss_price,
+                  trading_plan: params.data.trading_plan,
+                  limit_amt: params.newValue
+                }
+                
+                }).then(response => {
+                  console.log("Success", response)
+                }).catch(error => {
+                  alert("처리 에러")
+                  console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '저항가격', field: 'sign_resist_price', cellStyle: params=> {
         if(params.data.K_sign_resist_price === '1' ) {
           return {color:'orange', 'font-weight': 'bold'}
@@ -71,7 +102,8 @@ export default defineComponent({
                   sign_support_price: params.data.sign_support_price,
                   end_target_price: params.data.end_target_price,
                   end_loss_price: params.data.end_loss_price,
-                  trading_plan: params.data.trading_plan
+                  trading_plan: params.data.trading_plan,
+                  limit_amt: params.data.limit_amt
                 }
                 
                 }).then(response => {
@@ -100,7 +132,8 @@ export default defineComponent({
                   sign_support_price: params.newValue,
                   end_target_price: params.data.end_target_price,
                   end_loss_price: params.data.end_loss_price,
-                  trading_plan: params.data.trading_plan
+                  trading_plan: params.data.trading_plan,
+                  limit_amt: params.data.limit_amt
                 }
                 
                 }).then(response => {
@@ -129,7 +162,8 @@ export default defineComponent({
                   sign_support_price: params.data.sign_support_price,
                   end_target_price: params.newValue,
                   end_loss_price: params.data.end_loss_price,
-                  trading_plan: params.data.trading_plan
+                  trading_plan: params.data.trading_plan,
+                  limit_amt: params.data.limit_amt
                 }
                 
                 }).then(response => {
@@ -158,7 +192,8 @@ export default defineComponent({
                   sign_support_price: params.data.sign_support_price,
                   end_target_price: params.data.end_target_price,
                   end_loss_price: params.newValue,
-                  trading_plan: params.data.trading_plan
+                  trading_plan: params.data.trading_plan,
+                  limit_amt: params.data.limit_amt
                 }
                 
                 }).then(response => {
@@ -206,7 +241,8 @@ export default defineComponent({
                                                                                             sign_support_price: params.data.sign_support_price,
                                                                                             end_target_price: params.data.end_target_price,
                                                                                             end_loss_price: params.data.end_loss_price,
-                                                                                            trading_plan: params.newValue
+                                                                                            trading_plan: params.newValue,
+                                                                                            limit_amt: params.data.limit_amt
                                                                                           }
                                                                                           
                                                                                           }).then(response => {
