@@ -176,31 +176,47 @@ export default defineComponent({
       {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '평가금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '증감액', field: 'valuation_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
-      {headerName: '매매계획', field: 'trading_plan', valueFormatter: (params) => {return params.value === 'B' ? '매수' : params.value === 'S' ? '매도' : params.value === 'H' ? '보유' : ''}, valueSetter: params => {
-                
-        params.data.trading_plan = params.newValue;
+      {headerName: '매매계획', field: 'trading_plan', valueFormatter: (params) => {
+                                                                                  const planMap = {
+                                                                                    '20s': '20% 매도',
+                                                                                    '25s': '25% 매도',
+                                                                                    '33s': '33% 매도',
+                                                                                    '50s': '50% 매도',
+                                                                                    '66s': '66% 매도',
+                                                                                    'as': '전량매도',
+                                                                                    '1b': '1차 매수',
+                                                                                    '2b': '2차 매수',
+                                                                                    '3b': '3차 매수',
+                                                                                    '4b': '4차 매수',
+                                                                                    '5b': '5차 매수',
+                                                                                    'h': '홀딩',
+                                                                                    'i': '투자'
+                                                                                  };
+                                                                                  return planMap[params.value] || params.value || '';
+                                                                                }, valueSetter: params => {
+                                                                                  params.data.trading_plan = params.newValue;
 
-        axios({
-                method: "GET",
-                url: host + "/stockBalance/update/",
-                params:{
-                  id: params.data.id,
-                  code: params.data.code,
-                  sign_resist_price: params.data.sign_resist_price,
-                  sign_support_price: params.data.sign_support_price,
-                  end_target_price: params.data.end_target_price,
-                  end_loss_price: params.data.end_loss_price,
-                  trading_plan: params.newValue
-                }
-                
-                }).then(response => {
-                  console.log("Success", response)
-                }).catch(error => {
-                  alert("처리 에러")
-                  console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-      }, editable: true, cellEditor: 'agSelectCellEditor', cellEditorParams: {values:['H','S','B']},width: 50},
+                                                                                  axios({
+                                                                                          method: "GET",
+                                                                                          url: host + "/stockBalance/update/",
+                                                                                          params:{
+                                                                                            id: params.data.id,
+                                                                                            code: params.data.code,
+                                                                                            sign_resist_price: params.data.sign_resist_price,
+                                                                                            sign_support_price: params.data.sign_support_price,
+                                                                                            end_target_price: params.data.end_target_price,
+                                                                                            end_loss_price: params.data.end_loss_price,
+                                                                                            trading_plan: params.newValue
+                                                                                          }
+                                                                                          
+                                                                                          }).then(response => {
+                                                                                            console.log("Success", response)
+                                                                                          }).catch(error => {
+                                                                                            alert("처리 에러")
+                                                                                            console.log("Failed to updateItem1", error.response);
+                                                                                          });
+                                                                                          return true;
+      }, editable: true, cellEditor: 'agSelectCellEditor', cellEditorParams: {values:['20s', '25s', '33s', '50s', '66s', 'as', '1b', '2b', '3b', '4b', '5b', 'h', 'i']},width: 50},
       {headerName: '시가총액', field: 'total_market_value', valueFormatter: (params) => {return params.value.toLocaleString() + '억원';},width: 80},
     ]);
 
