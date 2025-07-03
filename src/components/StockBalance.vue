@@ -210,7 +210,11 @@ export default defineComponent({
       {headerName: '매도가능수량', field: 'avail_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},width: 80},
       {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '평가금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
-      {headerName: '증감액', field: 'valuation_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '증감액', field: 'valuation_sum', cellStyle: params=> {
+        if(Number(params.data.valuation_sum) > 0) {
+          return {color:'mediumvioletred', 'font-weight': 'bold'}
+        }
+      },valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '매매계획', field: 'trading_plan', valueFormatter: (params) => {
                                                                                   const planMap = {
                                                                                     '20s': '20% 매도',
