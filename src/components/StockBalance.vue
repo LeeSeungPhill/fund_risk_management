@@ -53,37 +53,7 @@ export default defineComponent({
       {headerName: '종목명', field: 'name', width: 120},
       {headerName: '매입가', field: 'purchase_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();}, width: 80},
       {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
-      {headerName: '손절가', field: 'limit_price', cellStyle: params=> {
-        if(params.data.D_limit_price === '1' ) {
-          return {color:'blueviolet', 'font-weight': 'bold'}
-        }
-      },valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
-      {headerName: '손절금액', field: 'limit_amt', valueSetter: params => {
-                
-        params.data.limit_amt = params.newValue;
-
-        axios({
-                method: "GET",
-                url: host + "/stockBalance/update/",
-                params:{
-                  id: params.data.id,
-                  code: params.data.code,
-                  sign_resist_price: params.data.sign_resist_price,
-                  sign_support_price: params.data.sign_support_price,
-                  end_target_price: params.data.end_target_price,
-                  end_loss_price: params.data.end_loss_price,
-                  trading_plan: params.data.trading_plan,
-                  limit_amt: params.newValue
-                }
-                
-                }).then(response => {
-                  console.log("Success", response)
-                }).catch(error => {
-                  alert("처리 에러")
-                  console.log("Failed to updateItem1", error.response);
-                });
-                return true;
-      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '수익률', field: 'earnings_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},width: 80},
       {headerName: '매매계획', field: 'trading_plan', valueFormatter: (params) => {
                                                                                   const planMap = {
                                                                                     '20s': '20% 매도',
@@ -247,7 +217,37 @@ export default defineComponent({
                 return true;
       }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '거래량비율', field: 'prdy_vol_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},width: 80},
-      {headerName: '수익률', field: 'earnings_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},width: 80},
+      {headerName: '손절가', field: 'limit_price', cellStyle: params=> {
+        if(params.data.D_limit_price === '1' ) {
+          return {color:'blueviolet', 'font-weight': 'bold'}
+        }
+      },valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '손절금액', field: 'limit_amt', valueSetter: params => {
+                
+        params.data.limit_amt = params.newValue;
+
+        axios({
+                method: "GET",
+                url: host + "/stockBalance/update/",
+                params:{
+                  id: params.data.id,
+                  code: params.data.code,
+                  sign_resist_price: params.data.sign_resist_price,
+                  sign_support_price: params.data.sign_support_price,
+                  end_target_price: params.data.end_target_price,
+                  end_loss_price: params.data.end_loss_price,
+                  trading_plan: params.data.trading_plan,
+                  limit_amt: params.newValue
+                }
+                
+                }).then(response => {
+                  console.log("Success", response)
+                }).catch(error => {
+                  alert("처리 에러")
+                  console.log("Failed to updateItem1", error.response);
+                });
+                return true;
+      }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},      
       {headerName: '보유수량', field: 'purchase_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},width: 80},
       {headerName: '매도가능수량', field: 'avail_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},width: 80},
       {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
