@@ -51,7 +51,7 @@ export default defineComponent({
       {headerName: 'No', colId: 0, valueGetter: (params) => { return params.node.rowIndex + 1 }, width: 30},
       {headerName: '종목코드', field: 'code', width: 60},
       {headerName: '종목명', field: 'name', width: 120},
-      {headerName: '매입가', field: 'purchase_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();}, width: 80},
+      {headerName: '매수가', field: 'purchase_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();}, width: 80},
       {headerName: '현재가', field: 'current_price', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '수익률', field: 'earnings_rate', valueFormatter: (params) => {return  params.value.toLocaleString() + '%';},width: 80},
       {headerName: '매매계획', field: 'trading_plan', valueFormatter: (params) => {
@@ -250,8 +250,8 @@ export default defineComponent({
       }, editable: true, cellEditor: 'agTextCellEditor', cellEditorParams: { min: 0, max: 9999999 }, valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},      
       {headerName: '보유수량', field: 'purchase_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},width: 80},
       {headerName: '매도가능수량', field: 'avail_amount', valueFormatter: (params) => {return params.value.toLocaleString() + '주';},width: 80},
-      {headerName: '매입총액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
-      {headerName: '평가금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '매수금액', field: 'purchase_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
+      {headerName: '현재금액', field: 'eval_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '안전마진', field: 'safe_margin_sum', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},width: 80},
       {headerName: '증감액', field: 'valuation_sum', cellStyle: params=> {
         if(Number(params.data.valuation_sum) > 0) {
