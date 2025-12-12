@@ -58,6 +58,7 @@ export default defineComponent({
       {headerName: '순자산금', field: 'nass_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '매도예정', field: 'sell_plan_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
       {headerName: '매수예정', field: 'buy_plan_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
+      {headerName: '매수가능', field: 'buy_psbl_amt', valueFormatter: (params) => {return '￦' + params.value.toLocaleString();},},
     ]);
 
     return {
