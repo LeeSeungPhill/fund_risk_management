@@ -46,7 +46,7 @@ export default {
             token_publ_date: null,
             selected: 'phills75',
             options: [
-                { text: 'Jupyter', value: 'phills75' }, { text: 'Terra', value: 'phills2' }, { text: 'Tess', value: 'chichipa' }, { text: 'Mama', value: 'yh480825' }, { text: 'Leo', value: 'phills13' }, { text: 'Sharon', value: 'phills15' }
+                { text: 'Jupyter', value: 'phills75' }, { text: 'Terra', value: 'phills2' }, { text: 'Tess', value: 'chichipa' }, { text: 'Mama', value: 'yh480825' }, { text: 'Mamalong', value: 'mamalong' }, { text: 'Leo', value: 'phills13' }, { text: 'Sharon', value: 'phills15' }
             ],
             
         }
